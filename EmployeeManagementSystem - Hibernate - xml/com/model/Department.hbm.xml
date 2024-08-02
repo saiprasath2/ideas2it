@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>  
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 5.3//EN"  
+ "http://hibernate.sourceforge.net/hibernate-mapping-5.3.dtd">  
+
+<hibernate-mapping>
+   <class name="com.model.Department" table="departments">
+      <id name="departmentId" column="department_id" type="int">
+         <generator class="increment"/>
+      </id>
+
+      <property name="departmentName" column="department_name" type = "string"/>
+      <property name="isRemoved" column="is_deleted" type="boolean"/>
+
+      <set name="employees" inverse="true" lazy="false" cascade="all">
+         <key column="department_id"/>
+         <one-to-many class="com.model.Employee"/>
+      </set>
+   </class>
+</hibernate-mapping>

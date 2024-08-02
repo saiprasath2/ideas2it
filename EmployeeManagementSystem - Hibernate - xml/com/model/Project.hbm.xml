@@ -1,0 +1,21 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>  
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 5.3//EN"  
+ "http://hibernate.sourceforge.net/hibernate-mapping-5.3.dtd"> 
+ 
+<hibernate-mapping>
+   <class name="com.model.Project" table="projects">
+     <id name="projectId" column="project_id">
+       <generator class="increment"/>
+     </id>
+
+     <property name="projectName" column="project_name" type ="string"/>
+     <property name="isRemoved" column="is_deleted" type="boolean"/>
+
+     <set name="employees" inverse="true" table="association_employee_project" lazy="false"
+      cascade ="save-update">
+       <key column="project_id"/>
+       <many-to-many column="employee_id"
+       class="com.model.Employee"/>
+     </set>
+   </class>
+</hibernate-mapping>
