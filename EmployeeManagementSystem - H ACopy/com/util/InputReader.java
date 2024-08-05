@@ -175,6 +175,56 @@ public class InputReader {
 
     /**
      * <p>
+     * Reads and returns the validated account number to EmployeeController.
+     * </p>
+     *
+     * @return String value of employee account number as input. 
+     */    
+    public String readAccount() {
+        boolean isGoodChoice = false;
+        String finalNumber = null;
+        scanner.nextLine();
+        while (!isGoodChoice) {
+            System.out.println("Give Account number to be added :");
+            String fNumber = scanner.nextLine();
+            boolean isGoodNumber = checkInput(fNumber);
+            if (isGoodNumber) {
+                finalNumber = fNumber;
+                isGoodChoice = true;
+            } else {
+                System.out.println("Improper format. Enter a Proper number");
+            }
+        }
+        return finalNumber;
+    }
+
+    /**
+     * <p>
+     * Reads and returns the validated ifsc code to EmployeeController.
+     * </p>
+     *
+     * @return String value of employee ifsc code as input. 
+     */    
+    public String readCode() {
+        boolean isGoodChoice = false;
+        String finalCode = null;
+        scanner.nextLine();
+        while (!isGoodChoice) {
+            System.out.println("Give IFSC code to be added :");
+            String fCode = scanner.nextLine();
+            boolean isGoodCode = checkInput(fCode);
+            if (isGoodCode) {
+                finalCode = fCode;
+                isGoodChoice = true;
+            } else {
+                System.out.println("Improper format. Enter a Proper Code");
+            }
+        }
+        return finalCode;
+    }
+
+    /**
+     * <p>
      * Scans and Checks the given project input is available in project List.
      * </p>
      *
@@ -246,37 +296,13 @@ public class InputReader {
 
     /**
      * <p>
-     * Checks the format of input project name.
+     * Checks the format of input project name/ account number/ ifsc Code.
      * </p>
      *
-     * param checkableProject String value to check the format.
+     * param checkableInput String value to check the format.
      * @return boolean value to validate input.
      */
-    public boolean checkProjectInput(String checkableProject){
-        return checkableProject.matches("[a-zA-Z0-9 ]+") ? true : false;
-    }  
-
-    /**
-     * <p>
-     * Checks the format of input account name.
-     * </p>
-     *
-     * param checkableAccount String value to check the format.
-     * @return boolean value to validate input.
-     */
-    public boolean checkAccountInput(String checkableAccount){
-        return checkableAccount.matches("[a-zA-Z0-9 ]+") ? true : false;
-    }  
-
-    /**
-     * <p>
-     * Checks the format of input ifsc code.
-     * </p>
-     *
-     * param checkableCode String value to check the format.
-     * @return boolean value to validate input.
-     */
-    public boolean checkCodeInput(String checkableCode){
-        return checkableCode.matches("[a-zA-Z0-9 ]+") ? true : false;
-    }  
+    public boolean checkInput(String checkableInput){
+        return checkableInput.matches("[a-zA-Z0-9 ]+") ? true : false;
+    } 
 }

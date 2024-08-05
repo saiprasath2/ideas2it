@@ -37,20 +37,19 @@ public class SalaryAccount {
     private String accountName;
 
     @Column(name = "ifsc_code")
-    private String IfscCode;
+    private String ifscCode;
 
     public SalaryAccount() {}
 
-    public SalaryAccount(int accountId, String accountName, String IfscCode) {
+    public SalaryAccount(int accountId, String accountName, String ifscCode) {
         this.accountId = accountId;
         this.accountName = accountName;
-        this.IfscCode = IfscCode;
-        employees = new Employees();
+        this.ifscCode = ifscCode;
     }
 
-    public SalaryAccount(String accountName, String IFSCcode) {
+    public SalaryAccount(String accountName, String ifscCode) {
         this.accountName = accountName;
-        this.IfscCode = IfscCode;
+        this.ifscCode = ifscCode;
     }
 
     public int getAccountId() {
@@ -69,11 +68,11 @@ public class SalaryAccount {
         this.accountName = accountName;
     }
 
-    public boolean getIfscCode() {
-        return IfscCode;
+    public String getIfscCode() {
+        return ifscCode;
     }
 
-    public void setIfscCode(boolean IfscCode) {
-        this.IfscCode = IfscCode;
+    public void setIfscCode(String ifscCode) {
+        this.ifscCode = ifscCode;
     }
 }

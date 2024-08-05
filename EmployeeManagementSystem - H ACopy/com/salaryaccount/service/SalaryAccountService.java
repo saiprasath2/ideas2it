@@ -24,12 +24,11 @@ public interface SalaryAccountService {
      * Passes account details to insertAccount to add.
      * </p>
      *
-     * @param accountName String value to add account name.
-     * @param IfscCode String Value to add ifsccode.
-     * @return boolean value to indicate insertion status.
+     * @param salaryAccount SalaryAccount value to add account details.
+     * @return int value to indicate insertion status.
      * @throws EmployeeException when insertion is failed.
      */
-    public boolean addAccount(String accountName, String IfscCode) throws EmployeeException;
+    public int addAccount(SalaryAccount salaryAccount) throws EmployeeException;
 
     /**
      * <p>
@@ -50,5 +49,15 @@ public interface SalaryAccountService {
      * @return account value to display the project.
      * @throws EmployeeException when there is no proper details provided.
      */  
-    public Map<Integer, SalaryAccount> getAccounts() throws EmployeeException;     
+    public SalaryAccount getAccount(int accountId) throws EmployeeException;   
+
+    /**
+     * <p>
+     * Passes account details to updateAccount to add.
+     * </p>
+     *
+     * @param salaryAccount SalaryAccount value to update account details.
+     * @throws EmployeeException when insertion is failed.
+     */
+    public void updateAccount(SalaryAccount salaryAccount) throws EmployeeException;  
 }

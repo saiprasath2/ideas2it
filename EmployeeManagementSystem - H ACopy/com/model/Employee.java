@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -65,8 +66,9 @@ public class Employee {
     )
     private Set<Project> project;
 
-    @OneToOne(cascade = CascadeType.All, not-null = "false")
-    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
+    @OneToOne(targetEntity = SalaryAccount.class,
+              cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_id")
     private SalaryAccount salaryAccount;
 
     public Employee() {}
@@ -74,16 +76,17 @@ public class Employee {
     public Employee(String employeeName, 
                            String contactNumber,  
                            Department department,
-                           LocalDate dateOfBirth) {
+                           LocalDate dateOfBirth,
+                           SalaryAccount salaryAccount) {
         this.employeeName = employeeName;
         this.contactNumber = contactNumber;
         this.department = department;
         this.dateOfBirth = dateOfBirth;  
         this.isRemoved = false; 
         this.salaryAccount = salaryAccount;
-        project = new HashSet<>();
-    }
-    
+        this.project = new HashSet<>();
+    }    
+
     public int getEmployeeId() {
         return employeeId;
     }

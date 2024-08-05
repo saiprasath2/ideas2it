@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import com.department.service.DepartmentService;
 import com.department.service.DepartmentServiceImpl;
 import com.employee.service.EmployeeService;
@@ -16,8 +19,11 @@ import com.exceptions.EmployeeException;
 import com.model.Department;
 import com.model.Employee;
 import com.model.Project;
+import com.model.SalaryAccount;
 import com.project.service.ProjectService;
 import com.project.service.ProjectServiceImpl;
+import com.salaryaccount.service.SalaryAccountService;
+import com.salaryaccount.service.SalaryAccountServiceImpl;
 import com.util.InputReader;
 
 /**
@@ -33,8 +39,10 @@ import com.util.InputReader;
  */
 public class EmployeeController {
     EmployeeService operationService = new EmployeeServiceImpl();
+    private static Logger logger = LogManager.getLogger();
     ProjectService projectService = new ProjectServiceImpl();
     DepartmentService departmentService = new DepartmentServiceImpl();
+    SalaryAccountService salaryAccountService = new SalaryAccountServiceImpl();
     InputReader reader = new InputReader();
     Scanner scanner = reader.scanner;
 
@@ -56,8 +64,7 @@ public class EmployeeController {
             System.out.println("5. Would you like to update an Employee?");
             System.out.println("6. Would you like to assign project to "
                                 + "an Employee?");
-            System.out.println("7. Would you like to add bank details?")
-            System.out.println("8. Do you want to Exit?");
+            System.out.println("7. Do you want to Exit?");
             int userWish = 0;
             boolean isValid = false;
             while (!isValid) {
@@ -77,17 +84,20 @@ public class EmployeeController {
                 LocalDate employeeDob = reader.readDob();
                 String contactNumber = reader.readNumber();
                 int department = reader.readDepartment();
+                String accountNumber = reader.readAccount();
+                String ifscCode = reader.readCode();
                 try {
                     boolean isAdded = operationService.addEmployee(employeeName,
                                                  employeeDob, 
-                                                 contactNumber, department);
+                                                 contactNumber, department,
+                                                 accountNumber, ifscCode);
                     if (isAdded) {
-                        System.out.println("Added Successfully!!");
+                         logger.info(employeeName +" Added Successfully!!");
                     } else {
-                        System.out.println("Failed to add!!");
+                        logger.info(employeeName + " Failed to add!!");
                     }
                 } catch (EmployeeException e) {
-                    System.out.println(e.getMessage()); 
+                    logger.error(e.getMessage()); 
                 }
                 break;
 
@@ -98,13 +108,13 @@ public class EmployeeController {
                     boolean isRemoved = operationService
                                            .removeEmployee(removableId);
                     if (isRemoved) {
-                        System.out.println("\n----Employee data has "
+                        logger.info("Id : " + removableId + "\n----Employee data has "
                                             + "been removed.----");
                     } else {
-                        System.out.println("Given data cannot be found.");
+                        logger.info("Id : " + removableId +" cannot be found.");
                     }
                 } catch (EmployeeException e) {
-                    System.out.println(e.getMessage()); 
+                     logger.error(e.getMessage()); 
                 }
                 break;
 
@@ -114,8 +124,8 @@ public class EmployeeController {
                                                           .displayEmployees();
                     System.out.println("We have " + employeeDetails.size() 
                                               + " employees.");
-                    String format = "| %-6s | %-15s | %-15s | %-15s | %-30s | %-15s |\n";
-                    System.out.format(format, "Id", "Name", "Contact", "Department", 
+                    String format = "| %-6s | %-15s | %-15s | %-15s | %-15s | %-15s | %-30s | %-15s |\n";
+                    System.out.format(format, "Id", "Name", "Contact", "Department", "Account Number", "Ifsc code",
                                       "Projects", "Age");
                     for (Employee employee : employeeDetails) {
                         if (employee.getIsRemoved() == false) {
@@ -123,14 +133,16 @@ public class EmployeeController {
                                               , employee.getEmployeeName()
                                               , employee.getContactNumber() 
                                               , employee.getDepartment().getDepartmentName()
+                                              , employee.getSalaryAccount().getAccountName()
+                                              , employee.getSalaryAccount().getIfscCode()
                                               , employee.getAllProjects()
                                               , employee.getAge());
                         }
                     } 
-                    System.out.println("----All of the employers have been"
+                    logger.info("----All of the employers have been"
                                         + " displayed.----"); 
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                   logger.error(e.getMessage());
                 }
                 break;
 
@@ -141,21 +153,23 @@ public class EmployeeController {
                     Employee employerDetail = operationService
                                                .searchEmployee(searchableId);
                     if (employerDetail != null && employerDetail.getIsRemoved() == false) {
-                        String pattern = "| %-6s | %-15s | %-15s | %-15s | %-30s | %-15s |\n";
-                        System.out.format(pattern, "Id", "Name", "Contact"
+                        String pattern = "| %-6s | %-15s | %-15s | %-15s | %-15s | %-15s | %-30s | %-15s |\n";
+                        System.out.format(pattern, "Id", "Name", "Contact", "Account Number", "Ifsc code"
                                           , "Department", "project", "Age");
                         System.out.format(pattern, employerDetail.getEmployeeId()
                                           , employerDetail.getEmployeeName()
                                           , employerDetail.getContactNumber() 
                                           , employerDetail.getDepartment().getDepartmentName()
+                                          , employerDetail.getSalaryAccount().getAccountName()
+                                          , employerDetail.getSalaryAccount().getIfscCode()
                                           , employerDetail.getAllProjects()
                                           , employerDetail.getAge());
 
                     } else {
-                        System.out.println("Data cannot found.");
+                        logger.info("Id : " + searchableId + " Data cannot found.");
                     }  
                 } catch (EmployeeException e) {
-                    System.out.println(e.getMessage()); 
+                    logger.error(e.getMessage()); 
                 }      
                 break;
 
@@ -164,6 +178,8 @@ public class EmployeeController {
                 int newDepartment = 0;
                 String newContactNumber = "";
                 String newName = "";
+                String newAccountNumber = "";
+                String newIfscCode = "";
                 LocalDate updatedDateOfBirth = LocalDate.now();
              	System.out.println("Enter Employee Id to update :");
                 int updateId = scanner.nextInt();
@@ -178,11 +194,18 @@ public class EmployeeController {
                                                                      .getContactNumber()
                                             + "\nDepartment : " + employer
                                                                   .getDepartment()
-                                                                  .getDepartmentName()); 
+                                                                  .getDepartmentName()
+                                            + "\nAccount Number" + employer
+                                                                   .getSalaryAccount()
+                                                                   .getAccountName()
+                                            + "\nIfsc Code" + employer
+                                                              .getSalaryAccount()
+                                                              .getIfscCode()); 
                         isFound = true;
                         System.out.println("What data do you like to update ? ");
                         System.out.println("1. Name\n2. DOB \n3. ContactNumber"
-                                            + "\n4. Department");
+                                            + "\n4. Department \n5. Account Number"
+                                            + "\n6. IFSC code");
                         System.out.print("\nEnter choice to update : ");
                         int userChoice = scanner.nextInt();
                         scanner.nextLine();
@@ -209,6 +232,28 @@ public class EmployeeController {
                             employer.setDepartment(departmentName);
                             break;
 
+                        case 5:
+                            newAccountNumber = reader.readAccount();
+                            String tempIfscCode = employer.getSalaryAccount()
+                                                              .getIfscCode();
+                            SalaryAccount account = employer.getSalaryAccount();
+                            account.setAccountName(newAccountNumber);
+                            account.setIfscCode(tempIfscCode);
+                            salaryAccountService.updateAccount(account);  
+                            employer.setSalaryAccount(account);
+                            break;     
+
+                        case 6:
+                            newIfscCode = reader.readAccount();
+                            String tempAccountNumber = employer.getSalaryAccount()
+                                                              .getAccountName();
+                            SalaryAccount accountDetail = employer.getSalaryAccount();
+                            accountDetail.setAccountName(tempAccountNumber);
+                            accountDetail.setIfscCode(newIfscCode);
+                            salaryAccountService.updateAccount(accountDetail);  
+                            employer.setSalaryAccount(accountDetail);
+                            break;                                                      
+
                         default:
                             System.out.println("Invalid choice. "
                                                 + "Please try again.");                                     
@@ -216,17 +261,17 @@ public class EmployeeController {
                     
                         boolean isUpdated = operationService.updateEmployee(employer);
                         if (isUpdated) {
-                            System.out.println("\n----Employee data has "
+                            logger.info("Id : " + updateId + "has "
                                                 + "been updated.----");
                         } else {
-                            System.out.println("Given data cannot be updated.");
+                            logger.info("Id : " + updateId + " data cannot be updated.");
                         }
                     }
                     if (!isFound) {
-                        System.out.println("\nSorry cannot find the data.");
+                        logger.info("Id : " + updateId + "\nSorry cannot find the data.");
                     }
                 } catch (EmployeeException e) {
-                    System.out.println(e.getMessage()); 
+                    logger.error(e.getMessage()); 
                 }
                 break;
 
@@ -236,7 +281,7 @@ public class EmployeeController {
                     if (operationService.displayEmployees().isEmpty()) {
                         System.out.println("No data found !");    
                     } else if (projectService.getProjects().size() == 0){
-                        System.out.println("No project found !");
+                        logger.info("No project found !");
                         System.out.println("Add a project please...");
                     } else {
                         System.out.println("Enter Employee id to assign :");
@@ -259,14 +304,14 @@ public class EmployeeController {
                                                         + " with this project.");
                                 } else {
                                     projectService.addEmployee(projectId, employee);
-                                    System.out.println("Assigned Successfully!");
+                                    logger.info("Id : " + assignId + "Assigned Successfully!");
                                 }    
                             } else {
                                 System.out.println("Enter valid input. "
                                                     + "No such Project!");
                             }
                         } else {
-                            System.out.println("Employee not found");
+                            logger.info("Id : " + assignId + "Employee not found");
                         }
                     }   
                 } catch (EmployeeException e) {

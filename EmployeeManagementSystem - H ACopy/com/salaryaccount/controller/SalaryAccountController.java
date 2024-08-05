@@ -2,15 +2,19 @@ package com.salaryaccount.controller;
 
 import java.util.InputMismatchException;
 import java.util.Map;
+import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.model.Employee;
-import com.model.salaryaccount;
+import com.model.SalaryAccount;
 import com.employee.service.EmployeeService;
 import com.employee.service.EmployeeServiceImpl;
+import com.exceptions.EmployeeException;
 import com.salaryaccount.service.SalaryAccountService;
-import com.salaryaccount.service.SalaryaccountServiceImpl;
+import com.salaryaccount.service.SalaryAccountServiceImpl;
 import com.util.InputReader;
 
 /**
@@ -27,6 +31,7 @@ import com.util.InputReader;
 public class SalaryAccountController {
     SalaryAccountService salaryAccountService = new SalaryAccountServiceImpl();
     EmployeeService operationService = new EmployeeServiceImpl();
+    private static Logger logger = LogManager.getLogger();
     Scanner scanner = new Scanner(System.in);
     InputReader reader = new InputReader();
 
@@ -42,7 +47,7 @@ public class SalaryAccountController {
             System.out.println("2. Would you like to search a account?");
             System.out.println("3. Back");
             int userWish = 0;
-            boolean isValid = 0;
+            boolean isValid = false;
             while (!isValid) {
                 try {
                     System.out.println("Enter choice : ");
@@ -64,7 +69,7 @@ public class SalaryAccountController {
                         displayAccounts();
                     } 
                 } catch (EmployeeException e) {
-                    System.out.println(e.getMessage()); 
+                    logger.error(e.getMessage()); 
                 }  
                 break;
 
@@ -97,10 +102,10 @@ public class SalaryAccountController {
                                           , employerDetail.getSalaryAccount().getIfscCode());
 
                     } else {
-                        System.out.println("Data cannot found.");
+                        logger.info("Data of " + searchableId + " cannot found");
                     }  
                 } catch (EmployeeException e) {
-                    System.out.println(e.getMessage()); 
+                    logger.error(e.getMessage()); 
                 }      
                 break;
 

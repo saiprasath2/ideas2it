@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import com.employee.service.EmployeeService;
 import com.employee.service.EmployeeServiceImpl;
 import com.exceptions.EmployeeException;
@@ -27,6 +30,7 @@ import com.util.InputReader;
  */
 public class ProjectController {
     ProjectService projectService = new ProjectServiceImpl();
+    private static Logger logger = LogManager.getLogger();
     Scanner scanner = new Scanner(System.in);
     InputReader reader = new InputReader();
     
@@ -64,7 +68,7 @@ public class ProjectController {
                     while (!validInput) {
                         System.out.println("Give the Project to be added :");
                         String userProject = scanner.nextLine();
-                        boolean isValidInput = reader.checkProjectInput(userProject);
+                        boolean isValidInput = reader.checkInput(userProject);
                         boolean isInserted = false;
                         try {
                              if (isValidInput) {
@@ -72,15 +76,15 @@ public class ProjectController {
                                     .addProject(userProject);
                                  validInput = true;
                                  if (isInserted) {
-                                     System.out.println("Created Successfully!");
+                                     logger.info(userProject + "Created Successfully!");
                                  } else {
-                                     System.out.println("Failed to create");
+                                     logger.info(userProject + "Failed to create");
                                  } 
                              } else {
                                  System.out.println("Enter the format correctly!!");
                              }
                         } catch (EmployeeException e) {
-                            System.out.println(e.getMessage()); 
+                            logger.error(e.getMessage()); 
                         }
                     }
                     break;  
@@ -94,13 +98,13 @@ public class ProjectController {
                             int projectId = reader.checkProject();
                             isDeleted = projectService.deleteProject(projectId);
                             if (isDeleted) {
-                                System.out.println("Project deleted successfully!");
+                                logger.info("Id : " + projectId + " deleted successfully!");
                             } else {
-                                System.out.println("Deletion failed");
+                                logger.info("Id : " + projectId + " Deletion failed");
                             }
                         } 
                     } catch (EmployeeException e) {
-                        System.out.println(e.getMessage()); 
+                        logger.error(e.getMessage()); 
                     }  
                     break;
  
@@ -113,7 +117,7 @@ public class ProjectController {
                              displayProjects();
                         } 
                     } catch (EmployeeException e) {
-                        System.out.println(e.getMessage()); 
+                        logger.error(e.getMessage()); 
                     }  
                     break;
         
@@ -140,11 +144,11 @@ public class ProjectController {
                                                       , employee.getAge());
                                 }
                             } else {
-                                System.out.println("No employees found !");
+                                logger.info("No employees found " + projectId);
                             }
                         } 
                     } catch (EmployeeException e) {
-                        System.out.println(e.getMessage()); 
+                        logger.error(e.getMessage()); 
                     }
                     break;
 
@@ -169,7 +173,7 @@ public class ProjectController {
                                    + "Name : " + entry.getValue().getProjectName());
             }
         } catch (EmployeeException e) {
-            System.out.println(e.getMessage()); 
+            logger.error(e.getMessage()); 
         }
     }
 }

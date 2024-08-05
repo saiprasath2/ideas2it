@@ -34,7 +34,8 @@ public interface EmployeeService {
      */
     public boolean addEmployee(String employeeName, LocalDate employeeDOB,
                                String contactNumber, 
-                               int departmentId) throws EmployeeException ;
+                               int departmentId, String accountName,
+                               String ifscCode) throws EmployeeException ;
 
     /**
      * <p> 

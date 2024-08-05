@@ -6,6 +6,7 @@ import com.department.service.DepartmentService;
 import com.department.service.DepartmentServiceImpl;
 import com.employee.controller.EmployeeController;
 import com.project.controller.ProjectController;
+import com.salaryaccount.controller.SalaryAccountController;
 import com.exceptions.EmployeeException;
 
 /**
@@ -20,6 +21,7 @@ public class Management {
     private EmployeeController operationController = new EmployeeController();
     private DepartmentController departmentController = new DepartmentController();
     private DepartmentService departmentService = new DepartmentServiceImpl();
+    private SalaryAccountController salaryAccountController = new SalaryAccountController();
 
     public void assistManagement() {
         boolean isExit = false;
@@ -29,7 +31,8 @@ public class Management {
             System.out.println("1. Would you like to view Department services?");
             System.out.println("2. Would you like to view Employee services?");
             System.out.println("3. Would you like to view Project services?");
-            System.out.println("4. Exit...");
+            System.out.println("4. Would you like to view Account services?");
+            System.out.println("5. Exit...");
             int userWish = 0;
             boolean isValid = false;
             while (!isValid) {
@@ -65,6 +68,9 @@ public class Management {
                 break;
 
             case 4:
+                salaryAccountController.assistAccount();
+
+            case 5:
                 isExit = true;
                 break;
 

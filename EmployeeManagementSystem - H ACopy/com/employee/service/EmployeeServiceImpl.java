@@ -5,14 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.model.Department;
 import com.department.service.DepartmentService;
 import com.department.service.DepartmentServiceImpl;
 import com.employee.dao.EmployeeDao;
 import com.employee.dao.EmployeeDaoImpl;
+import com.model.Department;
 import com.model.Employee;
+import com.model.SalaryAccount;
 import com.employee.service.EmployeeService;
 import com.exceptions.EmployeeException;
+import com.salaryaccount.service.SalaryAccountService;
+import com.salaryaccount.service.SalaryAccountServiceImpl;
 
 /**
  * <p>
@@ -26,14 +29,18 @@ import com.exceptions.EmployeeException;
 public class EmployeeServiceImpl implements EmployeeService {
     EmployeeDao operationDao = new EmployeeDaoImpl();
     DepartmentService departmentService = new DepartmentServiceImpl();
+    SalaryAccountService salaryAccountService = new SalaryAccountServiceImpl();
 
     @Override
     public boolean addEmployee(String employeeName, LocalDate employeeDOB,
-                            String contactNumber, int departmentId) throws EmployeeException { 
+                            String contactNumber, int departmentId,
+                            String accountNumber, String ifscCode) throws EmployeeException { 
         Department departmentName = departmentService
                                         .getDepartment(departmentId); 
+        SalaryAccount salaryAccount = new SalaryAccount(accountNumber, ifscCode);
+        salaryAccountService.addAccount(salaryAccount);
         Employee employee = new Employee(employeeName, contactNumber,
-                                         departmentName, employeeDOB);
+                                         departmentName, employeeDOB, salaryAccount);
         return operationDao.insertIntoDatabase(employee);
     }
     

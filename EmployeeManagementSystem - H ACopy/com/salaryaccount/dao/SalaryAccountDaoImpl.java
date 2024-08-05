@@ -29,23 +29,19 @@ import org.hibernate.Transaction;
  */
 public class SalaryAccountDaoImpl implements SalaryAccountDao {
     @Override
-    public boolean insertAccount(String accountName, String IfscCode) throws EmployeeException {
+    public int insertAccount(SalaryAccount salaryAccount) throws EmployeeException {
         Transaction transaction = null;   
         Integer id = 0;
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction(); 
-            SalaryAccount salaryAccount = new SalaryAccount(accountName, IfscCode);  
-            id = (Integer) session.saveOrUpdate(salaryAccount);
+            transaction = session.beginTransaction();  
+            id = (Integer) session.save(salaryAccount);
             transaction.commit();
         } catch (HibernateException e) {
             System.out.println(e.getMessage());
             throw new EmployeeException("Account cannot be added with name : " 
-                                        + accountName, e);
+                                        + salaryAccount.getAccountName(), e);
         }
-        if (id > 0) {
-           return true;
-        }
-        return false;
+        return id;
     }
 
     @Override
@@ -54,7 +50,7 @@ public class SalaryAccountDaoImpl implements SalaryAccountDao {
         Map<Integer, SalaryAccount> accounts = new HashMap<>();
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            Query<Project> query = session.createQuery("from SalaryAccount", SalaryAccount.class);
+            Query<SalaryAccount> query = session.createQuery("from SalaryAccount", SalaryAccount.class);
             List<SalaryAccount> accountsFromRecord = query.list();
             for (SalaryAccount account : accountsFromRecord) {
                 accounts.put(account.getAccountId(), account);
@@ -65,6 +61,21 @@ public class SalaryAccountDaoImpl implements SalaryAccountDao {
             System.out.println(e.getMessage());
             throw new EmployeeException("Accounts cannot be retrieved!", e);
         } 
+    }
+
+    @Override
+    public void updateAccount(SalaryAccount salaryAccount) throws EmployeeException {
+        Transaction transaction = null;   
+        Integer id = 0;
+        try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();  
+            session.saveOrUpdate(salaryAccount);
+            transaction.commit();
+        } catch (HibernateException e) {
+            System.out.println(e.getMessage());
+            throw new EmployeeException("Account cannot be updated with name : " 
+                                        + salaryAccount.getAccountName(), e);
+        }
     }
 
     @Override

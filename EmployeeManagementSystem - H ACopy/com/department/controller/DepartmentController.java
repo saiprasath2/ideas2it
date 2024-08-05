@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import com.department.service.DepartmentService;
 import com.department.service.DepartmentServiceImpl;
 import com.model.Department;
@@ -23,6 +26,7 @@ import com.util.InputReader;
  */
 public class DepartmentController {
     DepartmentService departmentService = new DepartmentServiceImpl();
+    private static Logger logger = LogManager.getLogger();
     Scanner scanner = new Scanner(System.in);
     InputReader reader = new InputReader();
     
@@ -71,15 +75,15 @@ public class DepartmentController {
                                 .addDepartment(userDepartment);
                             validInput = true;
                             if (isInserted) {
-                                System.out.println("Created Successfully!");
+                                logger.info(userDepartment + "Created Successfully!");
                             } else {
-                                System.out.println("Failed to create");
+                                logger.info(userDepartment + "Failed to create");
                             }    
                         } else {
                             System.out.println("Enter the format correctly!!");
                         }
                     } catch (EmployeeException e) {
-                        System.out.println(e.getMessage()); 
+                        logger.error(e.getMessage()); 
                     }
                 }
                 break;
@@ -95,16 +99,16 @@ public class DepartmentController {
                         if (employeeRecord.size() == 0) {
                             isDeleted = departmentService.deleteDepartment(departmentId);
                             if (isDeleted) {
-                                System.out.println("Department deleted successfully!");
+                                logger.info("Id : " + departmentId + " deleted successfully!");
                             } else {
-                                System.out.println("Deletion failed");
+                                logger.info("Id : " + departmentId + "Deletion failed");
                             }
                         } else {
-                            System.out.println("Cannot delete the linked data!");
+                            logger.warn("Cannot delete the linked data -->" + departmentId);
                         }
                     } 
                 } catch (EmployeeException e) {
-                    System.out.println(e.getMessage()); 
+                    logger.error(e.getMessage()); 
                 }
                 break;
 
@@ -121,7 +125,7 @@ public class DepartmentController {
                         }
                     }
                 } catch (EmployeeException e) {
-                    System.out.println(e.getMessage()); 
+                    logger.error(e.getMessage()); 
                 }
                 break;
 
@@ -145,10 +149,10 @@ public class DepartmentController {
                                                 , employee.getAge());
                         }
                     } else {
-                        System.out.println("No employees found !");
+                        logger.info("No employees found in " + departmentId);
                     }
                 } catch (EmployeeException e) {
-                    System.out.println(e.getMessage()); 
+                    logger.error(e.getMessage()); 
                 }
                 break;
              

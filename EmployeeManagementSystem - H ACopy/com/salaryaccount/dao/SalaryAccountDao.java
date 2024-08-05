@@ -23,13 +23,11 @@ public interface SalaryAccountDao {
      * creates the account and inserts it to the storage with auto-incremented Id.
      * </p>
      *
-     * @param accountName
-     *         For which account could not be null.
-     * @param IfscCode to insert ifsc code of account.
-     * @return boolean value to indicate insertion status.
+     * @param salaryAccount SalaryAccount value to insert account details.
+     * @return int value to indicate insertion status.
      * @throws EmployeeException when there is no proper details provided.
      */    
-    public boolean insertAccount(String accountName, String IfscCode) throws EmployeeException;
+    public int insertAccount(SalaryAccount salaryAccount) throws EmployeeException;
 
     /**
      * <p>
@@ -50,5 +48,15 @@ public interface SalaryAccountDao {
      * @return account value to display the project.
      * @throws EmployeeException when there is no proper details provided.
      */  
-    public SalaryAccount retrieveAccount(int accountId) throws EmployeeException;      
+    public SalaryAccount retrieveAccount(int accountId) throws EmployeeException;
+  
+    /**
+     * <p>
+     * Updates the account and inserts it to the storage with auto-incremented Id.
+     * </p>
+     *
+     * @param salaryAccount to update account details.
+     * @throws EmployeeException when there is no proper details provided.
+     */ 
+    public void updateAccount(SalaryAccount salaryAccount) throws EmployeeException;    
 }
