@@ -22,7 +22,7 @@ import com.ideas2it.ems.util.InputReader;
  * </p>
  *
  * @author Saiprasath
- * @version 1.0
+ * @version 1.4
  */
 public class DepartmentController {
     DepartmentService departmentService = new DepartmentServiceImpl();
@@ -36,7 +36,6 @@ public class DepartmentController {
      * Passes the parameters to methods at OperationService 
      */
     public void assistDepartment() {
-        DepartmentController departmentController = new DepartmentController();
         boolean isExit = false;
         while (!isExit) {
             System.out.println("Department Services : ");
@@ -52,8 +51,7 @@ public class DepartmentController {
             while (!isValid) {
                 try {
                     System.out.println("Enter choice : ");
-                    int wish = scanner.nextInt();
-                    userWish = wish;
+                    userWish = scanner.nextInt();
                     isValid = true;
                 } catch (InputMismatchException e) {
                     System.out.println("Enter Integer format!!");
@@ -69,14 +67,13 @@ public class DepartmentController {
                     System.out.println("Give the department to be added :");
                     String userDepartment = scanner.nextLine();
                     boolean isValidInput = reader.checkDeptInput(userDepartment);
-                    boolean isInserted = false;
                     try {
                         if (isValidInput) {
-                            isInserted = departmentService
+                            Department isInserted = departmentService
                                 .addDepartment(userDepartment);
                             validInput = true;
-                            if (isInserted) {
-                                logger.info(userDepartment + "Created Successfully!");
+                            if (null != isInserted) {
+                                logger.info(isInserted.getDepartmentName() + "Created Successfully!");
                             } else {
                                 logger.info(userDepartment + "Failed to create");
                             }    
@@ -90,16 +87,15 @@ public class DepartmentController {
                 break;
 
             case 2:
-                boolean isDeleted = false;
                 try {
-                    if (departmentService.getDepartments().size() == 0) {
+                    if (departmentService.getDepartments().isEmpty()) {
                         System.out.println("No departments to delete! ");
                     } else {
                         int departmentId = reader.readDepartment();
                         Set<Employee> employeeRecord = departmentService.getEmployeesOfDepartment(departmentId);                        
-                        if (employeeRecord.size() == 0) {
-                            isDeleted = departmentService.deleteDepartment(departmentId);
-                            if (isDeleted) {
+                        if (employeeRecord.isEmpty()) {
+                            Department isDeleted = departmentService.deleteDepartment(departmentId);
+                            if (null != isDeleted) {
                                 logger.info("Id : " + departmentId + " deleted successfully!");
                             } else {
                                 logger.info("Id : " + departmentId + "Deletion failed");
@@ -115,7 +111,7 @@ public class DepartmentController {
 
             case 3:
                 try {
-                    if (departmentService.getDepartments().size() == 0) {
+                    if (departmentService.getDepartments().isEmpty()) {
                         System.out.println("We have no departments yet.");
                     } else {
                         for (Map.Entry<Integer, Department> dept :
@@ -139,7 +135,7 @@ public class DepartmentController {
                                       , "Department", "Project", "Age");
                     Set<Employee> employees = departmentService
                                               .getEmployeesOfDepartment(departmentId);
-                    if (employees.size() != 0) {
+                    if (!employees.isEmpty()) {
                         for (Employee employee : employees) {
                               System.out.format(pattern1, employee.getEmployeeId()
                                                 , employee.getEmployeeName()
@@ -150,7 +146,7 @@ public class DepartmentController {
                                                 , employee.getAge());
                         }
                     } else {
-                        logger.info("No employees found in " + departmentId);
+                        logger.info("No employees found in {}", departmentId);
                     }
                 } catch (EmployeeException e) {
                     logger.error(e.getMessage()); 

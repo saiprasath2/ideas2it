@@ -16,7 +16,7 @@ import com.ideas2it.ems.model.Employee;
  * </p>
  *
  * @author Saiprasath
- * @version 1.0
+ * @version 1.4
  */
 public interface DepartmentDao {
  
@@ -27,10 +27,10 @@ public interface DepartmentDao {
      * </p>
      *
      * @param departmentName - String value to set department name.
-     * @return boolean value to alert insertion status.
+     * @return Department value to alert insertion status.
      * @throws EmployeeException when issue arises during insertion of value.
      */ 
-    public boolean insertDepartment(String departmentName) throws EmployeeException;
+    public Department insertDepartment(String departmentName) throws EmployeeException;
 
     /**
      * <p>
@@ -41,7 +41,7 @@ public interface DepartmentDao {
      * @return boolean value to alert deletion status.
      * @throws EmployeeException when issue arises during removal of department.
      */
-    public boolean removeDepartment(int departmentId) throws EmployeeException;
+    public Department removeDepartment(int departmentId) throws EmployeeException;
 
     /**
      * <p>

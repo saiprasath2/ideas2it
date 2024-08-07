@@ -1,10 +1,8 @@
 package com.ideas2it.ems.employee.controller;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.InputMismatchException;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -18,7 +16,6 @@ import com.ideas2it.ems.employee.service.EmployeeServiceImpl;
 import com.ideas2it.ems.exceptions.EmployeeException;
 import com.ideas2it.ems.model.Department;
 import com.ideas2it.ems.model.Employee;
-import com.ideas2it.ems.model.Project;
 import com.ideas2it.ems.model.SalaryAccount;
 import com.ideas2it.ems.project.service.ProjectService;
 import com.ideas2it.ems.project.service.ProjectServiceImpl;
@@ -35,24 +32,23 @@ import com.ideas2it.ems.util.InputReader;
  * </p>
  *
  * @author Saiprasath 
- * @version 1.0
+ * @version 1.4
  */
 public class EmployeeController {
     EmployeeService operationService = new EmployeeServiceImpl();
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     ProjectService projectService = new ProjectServiceImpl();
     DepartmentService departmentService = new DepartmentServiceImpl();
     SalaryAccountService salaryAccountService = new SalaryAccountServiceImpl();
     InputReader reader = new InputReader();
     Scanner scanner = reader.scanner;
 
-    /**
+    /**isValid
      * Displays available options to user.
      *
      * Passes the parameters to methods at OperationService 
      */
     public void assistEmployee() {
-        EmployeeController operationController = new EmployeeController();
         boolean isExit = false;
         while (!isExit) {
             System.out.println("Employee Management System: ");
@@ -66,11 +62,12 @@ public class EmployeeController {
                                 + "an Employee?");
             System.out.println("7. Do you want to Exit?");
             int userWish = 0;
-            boolean isValid = false;
+            boolean isValid  = false;
             while (!isValid) {
                 try {
                     System.out.println("Enter choice : ");
-                    int wish = scanner.nextInt();
+                    int wish;
+                    wish = scanner.nextInt();
                     userWish = wish;
                     isValid = true;
                 } catch (InputMismatchException e) {
@@ -87,14 +84,14 @@ public class EmployeeController {
                 String accountNumber = reader.readAccount();
                 String ifscCode = reader.readCode();
                 try {
-                    boolean isAdded = operationService.addEmployee(employeeName,
+                    Employee isAdded = operationService.addEmployee(employeeName,
                                                  employeeDob, 
                                                  contactNumber, department,
                                                  accountNumber, ifscCode);
-                    if (isAdded) {
-                         logger.info(employeeName +" Added Successfully!!");
+                    if (null != isAdded) {
+                        logger.info("{} Added Successfully!!", isAdded.getEmployeeName());
                     } else {
-                        logger.info(employeeName + " Failed to add!!");
+                        logger.info("{} Failed to add!!", employeeName);
                     }
                 } catch (EmployeeException e) {
                     logger.error(e.getMessage()); 
@@ -105,13 +102,12 @@ public class EmployeeController {
                 System.out.println("Enter the Employee Id to remove : ");
                 int removableId = scanner.nextInt();
                 try {
-                    boolean isRemoved = operationService
+                    Employee isRemoved = operationService
                                            .removeEmployee(removableId);
-                    if (isRemoved) {
-                        logger.info("Id : " + removableId + "\n----Employee data has "
-                                            + "been removed.----");
+                    if (null != isRemoved) {
+                        logger.info("Id : {}\n----Employee data has been removed.----", isRemoved.getEmployeeName());
                     } else {
-                        logger.info("Id : " + removableId +" cannot be found.");
+                        logger.info("Id : {} cannot be found.", removableId);
                     }
                 } catch (EmployeeException e) {
                      logger.error(e.getMessage()); 
@@ -121,14 +117,14 @@ public class EmployeeController {
             case 3:
                 try {
                     List<Employee> employeeDetails = operationService
-                                                          .displayEmployees();
+                                                          .retrieveEmployees();
                     System.out.println("We have " + employeeDetails.size() 
                                               + " employees.");
                     String format = "| %-6s | %-15s | %-15s | %-15s | %-15s | %-15s | %-30s | %-15s |\n";
                     System.out.format(format, "Id", "Name", "Contact", "Department", "Account Number", "Ifsc code",
                                       "Projects", "Age");
                     for (Employee employee : employeeDetails) {
-                        if (employee.getIsRemoved() == false) {
+                        if (!employee.getIsRemoved()) {
                             System.out.format(format, employee.getEmployeeId()
                                               , employee.getEmployeeName()
                                               , employee.getContactNumber() 
@@ -152,7 +148,7 @@ public class EmployeeController {
                 try {
                     Employee employerDetail = operationService
                                                .searchEmployee(searchableId);
-                    if (employerDetail != null && employerDetail.getIsRemoved() == false) {
+                    if (employerDetail != null && !employerDetail.getIsRemoved()) {
                         String pattern = "| %-6s | %-15s | %-15s | %-15s | %-15s | %-15s | %-30s | %-15s |\n";
                         System.out.format(pattern, "Id", "Name", "Contact", "Account Number", "Ifsc code"
                                           , "Department", "project", "Age");
@@ -166,7 +162,7 @@ public class EmployeeController {
                                           , employerDetail.getAge());
 
                     } else {
-                        logger.info("Id : " + searchableId + " Data cannot found.");
+                        logger.info("Id : {} Data cannot found.", searchableId);
                     }  
                 } catch (EmployeeException e) {
                     logger.error(e.getMessage()); 
@@ -186,7 +182,7 @@ public class EmployeeController {
                 try {
                     Employee employer = operationService
                                                .searchEmployee(updateId);    
-                    if (employer != null && employer.getIsRemoved() == false) {
+                    if (employer != null && !employer.getIsRemoved()) {
                         System.out.println("Your Given Id is found");
                         System.out.println("Name : " + employer.getEmployeeName()
                                             + "\nDOB : " + employer.getAge()
@@ -261,14 +257,13 @@ public class EmployeeController {
                     
                         boolean isUpdated = operationService.updateEmployee(employer);
                         if (isUpdated) {
-                            logger.info("Id : " + updateId + "has "
-                                                + "been updated.----");
+                            logger.info("Id : {}has been updated.----", updateId);
                         } else {
-                            logger.info("Id : " + updateId + " data cannot be updated.");
+                            logger.info("Id : {} data cannot be updated.", updateId);
                         }
                     }
                     if (!isFound) {
-                        logger.info("Id : " + updateId + "\nSorry cannot find the data.");
+                        logger.info("Id : {}\nSorry cannot find the data.", updateId);
                     }
                 } catch (EmployeeException e) {
                     logger.error(e.getMessage()); 
@@ -278,9 +273,9 @@ public class EmployeeController {
             case 6:
                 boolean isAssigned = false;
                 try {
-                    if (operationService.displayEmployees().isEmpty()) {
+                    if (operationService.retrieveEmployees().isEmpty()) {
                         System.out.println("No data found !");    
-                    } else if (projectService.getProjects().size() == 0){
+                    } else if (projectService.getProjects().isEmpty()){
                         logger.info("No project found !");
                         System.out.println("Add a project please...");
                     } else {
@@ -288,7 +283,7 @@ public class EmployeeController {
                         int assignId = scanner.nextInt();
                         Employee employee = operationService
                                                .searchEmployee(assignId);
-                        if (employee != null && employee.getIsRemoved() == false) {
+                        if (employee != null && !employee.getIsRemoved()) {
                             int projectId = reader.readProjectId();
                             Set<Employee> employeeRecord = projectService
                                                             .getEmployeesOfProjects(projectId);
@@ -296,6 +291,7 @@ public class EmployeeController {
                                 for (Employee employees : employeeRecord) {
                                     if (employees.getEmployeeId() == assignId) {
                                         isAssigned = true;
+                                        break;
                                     }    
                                 } 
                                 if (isAssigned) {
@@ -304,14 +300,14 @@ public class EmployeeController {
                                                         + " with this project.");
                                 } else {
                                     projectService.addEmployee(projectId, employee);
-                                    logger.info("Id : " + assignId + "Assigned Successfully!");
+                                    logger.info("Id : {}Assigned Successfully!", assignId);
                                 }    
                             } else {
                                 System.out.println("Enter valid input. "
                                                     + "No such Project!");
                             }
                         } else {
-                            logger.info("Id : " + assignId + "Employee not found");
+                            logger.info("Id : {}Employee not found", assignId);
                         }
                     }   
                 } catch (EmployeeException e) {

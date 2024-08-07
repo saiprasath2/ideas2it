@@ -1,10 +1,8 @@
 package com.ideas2it.ems.salaryaccount.service;
 
 import java.util.Map;
-import java.util.Set;
 
 import com.ideas2it.ems.exceptions.EmployeeException;
-import com.ideas2it.ems.model.Employee;
 import com.ideas2it.ems.model.SalaryAccount;
 
 
@@ -15,7 +13,7 @@ import com.ideas2it.ems.model.SalaryAccount;
  * </p>
  *
  * @author Saiprasath
- * version 1.0
+ * version 1.4
  */
 public interface SalaryAccountService {
     
@@ -25,10 +23,9 @@ public interface SalaryAccountService {
      * </p>
      *
      * @param salaryAccount SalaryAccount value to add account details.
-     * @return int value to indicate insertion status.
      * @throws EmployeeException when insertion is failed.
      */
-    public int addAccount(SalaryAccount salaryAccount) throws EmployeeException;
+    void addAccount(SalaryAccount salaryAccount) throws EmployeeException;
 
     /**
      * <p>
@@ -38,7 +35,7 @@ public interface SalaryAccountService {
      * @return Map<> value of available projects.
      * @throws EmployeeException when there is no proper details provided. 
      */
-    public Map<Integer, SalaryAccount> getAccounts() throws EmployeeException;
+    Map<Integer, SalaryAccount> getAccounts() throws EmployeeException;
 
     /**
      * <p>
@@ -46,10 +43,10 @@ public interface SalaryAccountService {
      * </p>
      *
      * @param accountId - int value to fetch the project.
-     * @return account value to display the project.
+     * @return SalaryAccount value to display the project.
      * @throws EmployeeException when there is no proper details provided.
-     */  
-    public SalaryAccount getAccount(int accountId) throws EmployeeException;   
+     */
+    SalaryAccount getAccount(int accountId) throws EmployeeException;
 
     /**
      * <p>
@@ -59,5 +56,5 @@ public interface SalaryAccountService {
      * @param salaryAccount SalaryAccount value to update account details.
      * @throws EmployeeException when insertion is failed.
      */
-    public void updateAccount(SalaryAccount salaryAccount) throws EmployeeException;  
+    void updateAccount(SalaryAccount salaryAccount) throws EmployeeException;
 }

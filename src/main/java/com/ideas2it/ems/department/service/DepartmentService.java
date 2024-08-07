@@ -13,7 +13,7 @@ import com.ideas2it.ems.model.Employee;
  * </p>
  *
  * @author   Saiprasath 
- * @version  1.0
+ * @version  1.4
  */
 public interface DepartmentService {
 
@@ -22,11 +22,11 @@ public interface DepartmentService {
      * passes the value for insertion into the collection.
      * </p>
      *
-     * @param department  String value to set department Name.
-     * @return boolean to indicate insertion status.
+     * @param departmentName  String value to set department Name.
+     * @return Department value to indicate insertion status.
      * @throws EmployeeException when insertion is failed.
      */    
-    public boolean addDepartment(String departmentName) throws EmployeeException;
+    public Department addDepartment(String departmentName) throws EmployeeException;
 
     /**
      * Calls retrieveEmployeeDepartments to get the department list.
@@ -40,10 +40,10 @@ public interface DepartmentService {
      * Calls the removeDepartment to delete the department.
      *
      * @param departmentId  int value to delete the department.
-     * @returns boolean value to indicate deletion status.
+     * @return boolean value to indicate deletion status.
      * @throws EmployeeException when deletion is failed.
      */
-    public boolean deleteDepartment(int departmentId) throws EmployeeException;
+    public Department deleteDepartment(int departmentId) throws EmployeeException;
 
     /**
      * Calls the getDepartment to fetch the department and returns the department.

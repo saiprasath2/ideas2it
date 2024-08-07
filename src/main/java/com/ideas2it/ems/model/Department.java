@@ -8,12 +8,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.ideas2it.ems.model.Employee;
 
 /**
  * <p> 
@@ -23,7 +20,7 @@ import com.ideas2it.ems.model.Employee;
  * </p>
  * 
  * @author Saiprasath
- * @version 1.0
+ * @version 1.4
  */
 @Entity
 @Table(name = "departments")

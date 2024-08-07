@@ -14,7 +14,7 @@ import com.ideas2it.ems.model.Project;
  * </p>
  *
  * @author Saiprasath
- * version 1.0
+ * version 1.4
  */
 public interface ProjectService {
     
@@ -24,31 +24,31 @@ public interface ProjectService {
      * </p>
      *
      * @param project  Project value to add project.
-     * @return boolean value to indicate insertion status.
+     * @return Project value to indicate insertion status.
      * @throws EmployeeException when insertion is failed.
      */
-    public boolean addProject(String project) throws EmployeeException;
+    Project addProject(String project) throws EmployeeException;
  
     /**
      * <p>
      * Retrieves all projects available.
      * </p>
      *
-     * @returns Map<> value to display projects.
+     * @return Map<> value to display projects.
      * @throws EmployeeException when retrieval is failed.
      */
-    public Map<Integer, Project> getProjects() throws EmployeeException;
+    Map<Integer, Project> getProjects() throws EmployeeException;
 
     /**
      * <p>
      * Retrieves required projects available.
      * </p>
      *
-     * @returns Project value to display projectName.
+     * @return Project value to display projectName.
      * @param id int value to get the project.
      * @throws EmployeeException when retrieval is failed.
      */
-    public Project getProject(int id) throws EmployeeException;
+    Project getProject(int id) throws EmployeeException;
     
     /**
      * <p>
@@ -56,10 +56,10 @@ public interface ProjectService {
      * </p>
      *
      * @param projectId int value to delete the given project.
-     * @return boolean value to indicate deletion status
+     * @return Project value to indicate deletion status
      * @throws EmployeeException when deletion is failed.
-     */ 
-    public boolean deleteProject(int projectId) throws EmployeeException;
+     */
+    Project deleteProject(int projectId) throws EmployeeException;
 
     /**
      * <p>
@@ -70,16 +70,16 @@ public interface ProjectService {
      * @param employee Employee value to add the employee.
      * @throws EmployeeException when addition is failed
      */
-    public void addEmployee(int id, Employee employee) throws EmployeeException;
+    void addEmployee(int id, Employee employee) throws EmployeeException;
 
     /**
      * <p>
      * Returns employee record under the specific project.
      * </p>
      *
-     * @param id int value to get the project.
+     * @param projectId int value to get the project.
      * @return Set<> value to list the employee.
      * @throws EmployeeException when addition is failed
      */
-    public Set<Employee> getEmployeesOfProjects(int projectId) throws EmployeeException;
+    Set<Employee> getEmployeesOfProjects(int projectId) throws EmployeeException;
 }

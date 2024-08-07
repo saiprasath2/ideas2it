@@ -2,7 +2,6 @@ package com.ideas2it.ems.util;
 
 import java.time.format.DateTimeParseException;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -267,7 +266,7 @@ public class InputReader {
      * @return boolean value to decide validity of input.
      */
     public boolean checkString(String checkableName){
-        return checkableName.matches("[a-zA-Z\\s]+") ? true : false;
+        return checkableName.matches("[a-zA-Z\\s]+");
     }
 
     /**
@@ -279,7 +278,7 @@ public class InputReader {
      * @return boolean value to check validity.
      */
     public boolean checkNumber(String checkableNumber){
-        return checkableNumber.matches("\\d{10}") ? true : false;
+        return checkableNumber.matches("\\d{10}");
     } 
  
     /**
@@ -291,7 +290,7 @@ public class InputReader {
      * @return boolean value of input to decide the input format.
      */
     public boolean checkDeptInput(String checkableDept){
-        return checkableDept.matches("[a-zA-Z\\s]+") ? true : false;
+        return checkableDept.matches("[a-zA-Z\\s]+");
     }
 
     /**
@@ -303,6 +302,6 @@ public class InputReader {
      * @return boolean value to validate input.
      */
     public boolean checkInput(String checkableInput){
-        return checkableInput.matches("[a-zA-Z0-9 ]+") ? true : false;
+        return checkableInput.matches("[a-zA-Z0-9 ]+");
     } 
 }

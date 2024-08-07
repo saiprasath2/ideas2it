@@ -13,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.ideas2it.ems.model.Employee;
-
 /**
  * <p> Represents blueprint for the project datatype.
  * Contains details of project such as Id, name.
@@ -22,7 +20,7 @@ import com.ideas2it.ems.model.Employee;
  * </p>
  *
  * @author Saiprasath
- * @version 1.0
+ * @version 1.4
  */
 @Entity
 @Table(name = "projects")

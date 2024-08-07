@@ -17,28 +17,28 @@ import com.ideas2it.ems.project.service.ProjectService;
  * </p>
  *
  * @author Saiprasath
- * version 1.0
+ * version 1.4
  */
 public class ProjectServiceImpl implements ProjectService {
     ProjectDao projectDao = new ProjectDaoImpl();
     
     @Override
-    public boolean addProject(String project) throws EmployeeException {
+    public Project addProject(String project) throws EmployeeException {
         return projectDao.insertProject(project);
     }
 
     @Override
     public Map<Integer, Project> getProjects() throws EmployeeException {
-        return projectDao.retrieveEmployeeProjects();
+        return projectDao.getEmployeeProjects();
     }
 
     @Override
     public Project getProject(int id) throws EmployeeException {
-        return projectDao.retrieveProject(id);        
+        return projectDao.getProject(id);
     }
    
     @Override   
-    public boolean deleteProject(int projectId) throws EmployeeException {
+    public Project deleteProject(int projectId) throws EmployeeException {
         return projectDao.removeProject(projectId);
     }
 

@@ -7,16 +7,16 @@ import com.ideas2it.ems.exceptions.EmployeeException;
 import com.ideas2it.ems.model.Project;
 import com.ideas2it.ems.model.Employee;
 
-/*
- *<p>
+/**
+ * <p>
  * Inserts, deletes, updates and fetches data of the project.
  *
- * Handles datas of project along with employee entity to display 
+ * Handles data's of project along with employee entity to display
  * the employees project wise.
  * </p>
  *
  * @author Saiprasath
- * @version 1.0
+ * @version 1.4
  */
 public interface ProjectDao {
     
@@ -27,10 +27,10 @@ public interface ProjectDao {
      *
      * @param projectName
      *         For which project could not be null.
-     * @return boolean value to indicate insertion status.
+     * @return Project value to indicate insertion status.
      * @throws EmployeeException when there is no proper details provided.
      */
-    public boolean insertProject(String projectName) throws EmployeeException;
+    Project insertProject(String projectName) throws EmployeeException;
 
     /**
      * <p>
@@ -38,10 +38,10 @@ public interface ProjectDao {
      * </p>
      *
      * @param projectId - int value to delete the project.
-     * @return boolean value to indicate removal status.
+     * @return Project value to indicate removal status.
      * @throws EmployeeException when there is no proper details provided.
      */
-    public boolean removeProject(int projectId) throws EmployeeException;
+    Project removeProject(int projectId) throws EmployeeException;
 
     /**
      * <p>
@@ -51,7 +51,7 @@ public interface ProjectDao {
      * @return Map<> value of available projects.
      * @throws EmployeeException when there is no proper details provided. 
      */
-    public Map<Integer, Project> retrieveEmployeeProjects() throws EmployeeException;
+    Map<Integer, Project> getEmployeeProjects() throws EmployeeException;
 
     /**
      * <p>
@@ -61,8 +61,8 @@ public interface ProjectDao {
      * @param projectId - int value to fetch the project.
      * @return Project value to display the project.
      * @throws EmployeeException when there is no proper details provided.
-     */  
-    public Project retrieveProject(int projectId) throws EmployeeException;
+     */
+    Project getProject(int projectId) throws EmployeeException;
    
     /**
      * <p>
@@ -72,8 +72,8 @@ public interface ProjectDao {
      * @param projectId - int value to fetch the project.
      * @return Set<> value to display the employee.
      * @throws EmployeeException when there is no proper details provided.
-     */  
-    public Set<Employee> getEmployeesOfProjects(int projectId) throws EmployeeException;
+     */
+    Set<Employee> getEmployeesOfProjects(int projectId) throws EmployeeException;
   
     /**
      * <p>
@@ -84,6 +84,6 @@ public interface ProjectDao {
      * @param employee - Employee value to insert the employee.
      * @throws EmployeeException When there is no proper insertion of employee
      *                           into the projects.
-     */ 
-    public void insertEmployee(int id, Employee employee) throws EmployeeException;  
+     */
+    void insertEmployee(int id, Employee employee) throws EmployeeException;
 }

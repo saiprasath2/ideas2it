@@ -8,8 +8,6 @@ import java.util.Set;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import com.ideas2it.ems.employee.service.EmployeeService;
-import com.ideas2it.ems.employee.service.EmployeeServiceImpl;
 import com.ideas2it.ems.exceptions.EmployeeException;
 import com.ideas2it.ems.model.Employee;
 import com.ideas2it.ems.model.Project;
@@ -26,11 +24,11 @@ import com.ideas2it.ems.util.InputReader;
  * </p>
  *
  * @author Saiprasath
- * version 1.0
+ * version 1.4
  */
 public class ProjectController {
     ProjectService projectService = new ProjectServiceImpl();
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     Scanner scanner = new Scanner(System.in);
     InputReader reader = new InputReader();
     
@@ -38,7 +36,6 @@ public class ProjectController {
      * Scans input choice from user.
      */
     public void assistProject() {
-        ProjectController projectController = new ProjectController();
         boolean isExit = false;
         while (!isExit) {
             System.out.println("Project Management :");
@@ -53,8 +50,7 @@ public class ProjectController {
             while (!isValid) {
                 try {
                     System.out.println("Enter choice : ");
-                    int wish = scanner.nextInt();
-                    userWish = wish;
+                    userWish = scanner.nextInt();
                     isValid = true;
                 } catch (InputMismatchException e) {
                     System.out.println("Enter Integer format!!");
@@ -69,16 +65,15 @@ public class ProjectController {
                         System.out.println("Give the Project to be added :");
                         String userProject = scanner.nextLine();
                         boolean isValidInput = reader.checkInput(userProject);
-                        boolean isInserted = false;
                         try {
                              if (isValidInput) {
-                                 isInserted = projectService
+                                 Project isInserted = projectService
                                     .addProject(userProject);
-                                 validInput = true;
-                                 if (isInserted) {
-                                     logger.info(userProject + "Created Successfully!");
+                                  validInput = true;
+                                 if (null != isInserted) {
+                                     logger.info("{}Created Successfully!", userProject);
                                  } else {
-                                     logger.info(userProject + "Failed to create");
+                                     logger.info("{}Failed to create", userProject);
                                  } 
                              } else {
                                  System.out.println("Enter the format correctly!!");
@@ -90,17 +85,16 @@ public class ProjectController {
                     break;  
             
                 case 2:
-                    boolean isDeleted = false;
                     try {
-                        if (projectService.getProjects().size() == 0) {
+                        if (projectService.getProjects().isEmpty()) {
                             System.out.println("No projects to delete! ");
                         } else {
                             int projectId = reader.checkProject();
-                            isDeleted = projectService.deleteProject(projectId);
-                            if (isDeleted) {
-                                logger.info("Id : " + projectId + " deleted successfully!");
+                            Project isDeleted = projectService.deleteProject(projectId);
+                            if (null != isDeleted) {
+                                logger.info("Id : {} deleted successfully!", projectId);
                             } else {
-                                logger.info("Id : " + projectId + " Deletion failed");
+                                logger.info("Id : {} Deletion failed", projectId);
                             }
                         } 
                     } catch (EmployeeException e) {
@@ -110,7 +104,7 @@ public class ProjectController {
  
                 case 3:
                     try {
-                        if (projectService.getProjects().size() == 0) {
+                        if (projectService.getProjects().isEmpty()) {
                             System.out.println("We have no projects yet.");
                         } else {
                              System.out.println("Avalaible Projects :");
@@ -123,7 +117,7 @@ public class ProjectController {
         
                 case 4:
                     try {
-                        if (projectService.getProjects().size() == 0) {
+                        if (projectService.getProjects().isEmpty()) {
                             System.out.println("No Projects found");
                         } else {
                             int projectId = reader.checkProject();
@@ -133,7 +127,7 @@ public class ProjectController {
                                                + " %-30s | %-6s |\n";
                             System.out.format(pattern1, "Id", "Name", "Contact"
                                               , "Department", "Project", "Age");
-                            if (employees.size() != 0) {
+                            if (!employees.isEmpty()) {
                                 for (Employee employee : employees) {
                                     System.out.format(pattern1, employee.getEmployeeId()
                                                       , employee.getEmployeeName()

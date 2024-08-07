@@ -6,30 +6,33 @@ import java.util.Map;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import com.ideas2it.ems.assister.ConnectionAssister;
 import com.ideas2it.ems.exceptions.EmployeeException;
 import com.ideas2it.ems.model.Project;
 import com.ideas2it.ems.model.Employee;
-import com.ideas2it.ems.project.dao.ProjectDao;
-import org.hibernate.HibernateException; 
+import org.hibernate.HibernateException;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-/*
- *<p>
+/**
+ * <p>
  * Inserts, deletes, updates and fetches data of the project.
  *
- * Handles datas of project along with employee entity to display 
+ * Handles data's of project along with employee entity to display
  * the employees project wise.
  * </p>
  *
  * @author Saiprasath
- * @version 1.0
- */
-public class ProjectDaoImpl implements ProjectDao {    
+ * @version 1.4
+ **/
+public class ProjectDaoImpl implements ProjectDao {
+    private static final Logger logger = LogManager.getLogger();
     @Override
-    public boolean insertProject(String projectName) throws EmployeeException {
+    public Project insertProject(String projectName) throws EmployeeException {
         Transaction transaction = null;   
         Integer id = 0;
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
@@ -37,20 +40,20 @@ public class ProjectDaoImpl implements ProjectDao {
             Project project = new Project(projectName);  
             id = (Integer) session.save(project);
             transaction.commit();
+            if (id > 0) {
+                return project;
+            }
         } catch (HibernateException e) {
-            System.out.println(e.getMessage());
+            logger.error("Project cannot be added with name : {}", projectName);
             throw new EmployeeException("Project cannot be added with name : " 
                                         + projectName, e);
         }
-        if (id > 0) {
-           return true;
-        }
-        return false;
+        return null;
     }  
 
 
     @Override
-    public boolean removeProject(int projectId) throws EmployeeException {
+    public Project removeProject(int projectId) throws EmployeeException {
         Transaction transaction = null;   
         int rowsAffected = 0;
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
@@ -58,18 +61,19 @@ public class ProjectDaoImpl implements ProjectDao {
             Query<?> query = session.createQuery("update Project set isRemoved = true"
                                                  + " where projectId = :id").setParameter("id", projectId);
             rowsAffected = query.executeUpdate();
+            Project project = getProject(projectId);
             if (rowsAffected == 1) {
-                return true;
+                return project;
             }
         } catch (HibernateException e) {
-            System.out.println(e.getMessage());
-            throw new EmployeeException("Error at removing " + projectId, e);
+            logger.error("Error at removing with Id :{}", projectId);
+            throw new EmployeeException("Error at removing with Id :" + projectId, e);
         }
-        return false;
+        return null;
     }
     
     @Override
-    public Map<Integer, Project> retrieveEmployeeProjects() throws EmployeeException {
+    public Map<Integer, Project> getEmployeeProjects() throws EmployeeException {
         Transaction transaction = null;   
         Map<Integer, Project> projects = new HashMap<>();
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
@@ -82,13 +86,13 @@ public class ProjectDaoImpl implements ProjectDao {
             transaction.commit();
             return projects;
         } catch (HibernateException e) {
-            System.out.println(e.getMessage());
+            logger.error("Projects cannot be retrieved!");
             throw new EmployeeException("Projects cannot be retrieved!", e);
         } 
     }     
     
     @Override
-    public Project retrieveProject(int projectId) throws EmployeeException {  
+    public Project getProject(int projectId) throws EmployeeException {
         Transaction transaction = null;
         Project project = null;   
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
@@ -97,8 +101,8 @@ public class ProjectDaoImpl implements ProjectDao {
             transaction.commit();
             return project;
         } catch (HibernateException e) {
-            System.out.println(e.getMessage());
-            throw new EmployeeException("Error at searching " + projectId, e);
+            logger.error("Error at searching project with Id : {}", projectId);
+            throw new EmployeeException("Error at searching project with Id : " + projectId, e);
         }
     }
 
@@ -110,7 +114,7 @@ public class ProjectDaoImpl implements ProjectDao {
             transaction = session.beginTransaction();
             Project project = session.get(Project.class, projectId);
             employees = project.getEmployees();
-            if (project != null) {
+            if (null != project) {
                 employees = project.getEmployees();
             } 
             transaction.commit(); 
@@ -138,10 +142,9 @@ public class ProjectDaoImpl implements ProjectDao {
             session.saveOrUpdate(project);
             transaction.commit();
         } catch (HibernateException e) {
-            System.out.println(e.getMessage());
-            throw new EmployeeException("Error at inserting Employee" + newEmployee.getEmployeeId()
-                                         + "under Projects" 
-                                         + retrieveProject(id).getProjectName(), e);
+            logger.error("Error at inserting Employee{}under Projects{}", employee.getEmployeeId(), getProject(id).getProjectName());
+            throw new EmployeeException("Error at inserting Employee" + employee.getEmployeeId()
+                                         + "under Projects" + getProject(id).getProjectName(), e);
         }
     }
 }

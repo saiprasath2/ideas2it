@@ -1,7 +1,6 @@
 package com.ideas2it.ems.employee.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import com.ideas2it.ems.employee.dao.EmployeeDaoImpl;
 import com.ideas2it.ems.model.Department;
 import com.ideas2it.ems.model.Employee;
 import com.ideas2it.ems.model.SalaryAccount;
-import com.ideas2it.ems.employee.service.EmployeeService;
 import com.ideas2it.ems.exceptions.EmployeeException;
 import com.ideas2it.ems.salaryaccount.service.SalaryAccountService;
 import com.ideas2it.ems.salaryaccount.service.SalaryAccountServiceImpl;
@@ -24,7 +22,7 @@ import com.ideas2it.ems.salaryaccount.service.SalaryAccountServiceImpl;
  * </p>
  *
  * @author Saiprasath
- * version 1.0
+ * version 1.4
  */
 public class EmployeeServiceImpl implements EmployeeService {
     EmployeeDao operationDao = new EmployeeDaoImpl();
@@ -32,7 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     SalaryAccountService salaryAccountService = new SalaryAccountServiceImpl();
 
     @Override
-    public boolean addEmployee(String employeeName, LocalDate employeeDOB,
+    public Employee addEmployee(String employeeName, LocalDate employeeDOB,
                             String contactNumber, int departmentId,
                             String accountNumber, String ifscCode) throws EmployeeException { 
         Department departmentName = departmentService
@@ -53,19 +51,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
     
     @Override   
-    public boolean removeEmployee(int removableId) throws EmployeeException {
+    public Employee removeEmployee(int removableId) throws EmployeeException {
         return operationDao.removeEmployee(removableId);
     }
 
     @Override
-    public List<Employee> displayEmployees() throws EmployeeException {
-        List<Employee> serviceStorage = operationDao.retrieveEmployees();
-        return serviceStorage;  
+    public List<Employee> retrieveEmployees() throws EmployeeException {
+        return operationDao.getEmployees();
     } 
 
     @Override
     public Employee searchEmployee(int searchableId) throws EmployeeException {
-        return operationDao.retrieveEmployee(searchableId);
+        return operationDao.getEmployee(searchableId);
     }
   
     @Override

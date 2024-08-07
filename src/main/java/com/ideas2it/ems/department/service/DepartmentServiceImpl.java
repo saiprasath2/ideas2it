@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.ideas2it.ems.department.dao.DepartmentDao;
 import com.ideas2it.ems.department.dao.DepartmentDaoImpl;
-import com.ideas2it.ems.department.service.DepartmentService;
 import com.ideas2it.ems.exceptions.EmployeeException;
 import com.ideas2it.ems.model.Department;
 import com.ideas2it.ems.model.Employee;
@@ -18,13 +17,13 @@ import com.ideas2it.ems.model.Employee;
  * </p>
  *
  * author Saiprasath
- * version 1.0
+ * version 1.4
  */
 public class DepartmentServiceImpl implements DepartmentService {
     DepartmentDao departmentDao = new DepartmentDaoImpl();
     
     @Override
-    public boolean addDepartment(String department) throws EmployeeException {
+    public Department addDepartment(String department) throws EmployeeException {
         return departmentDao.insertDepartment(department);
     }
  
@@ -34,7 +33,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public boolean deleteDepartment(int departmentId) throws EmployeeException {
+    public Department deleteDepartment(int departmentId) throws EmployeeException {
         return departmentDao.removeDepartment(departmentId);
     }
     

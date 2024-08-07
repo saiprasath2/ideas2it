@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -17,12 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-
 import javax.persistence.Table;
-
-import com.ideas2it.ems.model.Department;
-import com.ideas2it.ems.model.Project;
-import com.ideas2it.ems.model.SalaryAccount;
 
 /**
  * <p> Represents blueprint for the Employee datatype.
@@ -31,7 +25,7 @@ import com.ideas2it.ems.model.SalaryAccount;
  * </p>
  *
  * @author Saiprasath
- * @version 1.0
+ * @version 1.4
  */
 @Entity
 @Table(name = "employees")

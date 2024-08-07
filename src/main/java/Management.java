@@ -1,6 +1,9 @@
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import com.ideas2it.ems.department.controller.DepartmentController;
 import com.ideas2it.ems.department.service.DepartmentService;
 import com.ideas2it.ems.department.service.DepartmentServiceImpl;
@@ -16,18 +19,21 @@ import com.ideas2it.ems.exceptions.EmployeeException;
  * </p>
  *
  * If there is no department, it will not allow calling Employee controller.
+ *
+ * @author Saiprasath
+ * @version 1.4
  */
 public class Management {
-    private Scanner scanner = new Scanner(System.in);
-    private ProjectController projectController = new ProjectController();
-    private EmployeeController operationController = new EmployeeController();
-    private DepartmentController departmentController = new DepartmentController();
-    private DepartmentService departmentService = new DepartmentServiceImpl();
-    private SalaryAccountController salaryAccountController = new SalaryAccountController();
+    private final Scanner scanner = new Scanner(System.in);
+    private final ProjectController projectController = new ProjectController();
+    private final EmployeeController operationController = new EmployeeController();
+    private final DepartmentController departmentController = new DepartmentController();
+    private final DepartmentService departmentService = new DepartmentServiceImpl();
+    private static final Logger logger = LogManager.getLogger();
+    private final SalaryAccountController salaryAccountController = new SalaryAccountController();
 
     public void assistManagement() {
         boolean isExit = false;
-        Management manage = new Management();
         while (!isExit) {
             System.out.println("Employee Management Services : ");
             System.out.println("1. Would you like to view Department services?");
@@ -40,8 +46,7 @@ public class Management {
             while (!isValid) {
                 try {
                     System.out.println("Enter choice : ");
-                    int wish = scanner.nextInt();
-                    userWish = wish;
+                    userWish = scanner.nextInt();
                     isValid = true;
                 } catch (InputMismatchException e) {
                     System.out.println("Enter Integer format!!");
@@ -55,13 +60,13 @@ public class Management {
  
             case 2:
                 try {
-                    if (departmentService.getDepartments().size() == 0) {
+                    if (departmentService.getDepartments().isEmpty()) {
                         System.out.println("We have no departments yet.\nAdd Department please..!");
                     } else {
                         operationController.assistEmployee();
                     }
                 } catch (EmployeeException e) {
-                    System.out.println(e.getMessage()); 
+                    logger.error(e.getMessage());
                 }
                 break;    
 

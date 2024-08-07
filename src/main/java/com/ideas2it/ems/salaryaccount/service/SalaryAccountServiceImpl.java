@@ -1,10 +1,8 @@
 package com.ideas2it.ems.salaryaccount.service;
 
 import java.util.Map;
-import java.util.Set;
 
 import com.ideas2it.ems.exceptions.EmployeeException;
-import com.ideas2it.ems.model.Employee;
 import com.ideas2it.ems.model.SalaryAccount;
 import com.ideas2it.ems.salaryaccount.dao.SalaryAccountDao;
 import com.ideas2it.ems.salaryaccount.dao.SalaryAccountDaoImpl;
@@ -16,24 +14,24 @@ import com.ideas2it.ems.salaryaccount.dao.SalaryAccountDaoImpl;
  * </p>
  *
  * @author Saiprasath
- * version 1.0
+ * version 1.4
  */
 public class SalaryAccountServiceImpl implements SalaryAccountService {
     SalaryAccountDao salaryAccountDao = new SalaryAccountDaoImpl();
 
     @Override
-    public int addAccount(SalaryAccount salaryAccount) throws EmployeeException {
-        return salaryAccountDao.insertAccount(salaryAccount);
+    public void addAccount(SalaryAccount salaryAccount) throws EmployeeException {
+        salaryAccountDao.insertAccount(salaryAccount);
     }
 
     @Override
     public Map<Integer, SalaryAccount> getAccounts() throws EmployeeException {
-        return salaryAccountDao.retrieveEmployeeAccounts();
+        return salaryAccountDao.getEmployeeAccounts();
     }
 
     @Override 
     public SalaryAccount getAccount(int accountId) throws EmployeeException {
-        return salaryAccountDao.retrieveAccount(accountId);
+        return salaryAccountDao.getAccount(accountId);
     }
 
     @Override

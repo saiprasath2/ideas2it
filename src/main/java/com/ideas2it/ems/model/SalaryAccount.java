@@ -1,19 +1,11 @@
 package com.ideas2it.ems.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.ideas2it.ems.model.Employee;
 
 /**
  * <p> Represents blueprint for the salary account datatype.
@@ -22,7 +14,7 @@ import com.ideas2it.ems.model.Employee;
  * </p>
  *
  * @author Saiprasath
- * @version 1.0
+ * @version 1.4
  */
 @Entity
 @Table(name = "salary_account")

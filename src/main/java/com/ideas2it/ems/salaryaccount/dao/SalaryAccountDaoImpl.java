@@ -1,51 +1,52 @@
 package com.ideas2it.ems.salaryaccount.dao;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.List;
-import java.util.Set;
 
-import com.ideas2it.ems.assister.ConnectionAssister;
-import com.ideas2it.ems.exceptions.EmployeeException;
-import com.ideas2it.ems.model.Employee;
-import com.ideas2it.ems.model.SalaryAccount;
-import com.ideas2it.ems.salaryaccount.dao.SalaryAccountDao;
-import org.hibernate.HibernateException; 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
+import org.hibernate.HibernateException;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+import com.ideas2it.ems.assister.ConnectionAssister;
+import com.ideas2it.ems.exceptions.EmployeeException;
+import com.ideas2it.ems.model.SalaryAccount;
+
 
 /*
  *<p>
  * Inserts, deletes, updates and fetches data of the salaryaccount.
  *
- * Handles datas of salaryaccount along with employee entity to display 
+ * Handles data's of salary account along with employee entity to display
  * the employees account wise.
  * </p>
  *
  * @author Saiprasath
- * @version 1.0
+ * @version 1.4
  */
 public class SalaryAccountDaoImpl implements SalaryAccountDao {
+    private static final Logger logger = LogManager.getLogger();
     @Override
-    public int insertAccount(SalaryAccount salaryAccount) throws EmployeeException {
-        Transaction transaction = null;   
-        Integer id = 0;
+    public  void insertAccount(SalaryAccount salaryAccount) throws EmployeeException {
+        Transaction transaction = null;
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();  
-            id = (Integer) session.save(salaryAccount);
+            session.save(salaryAccount);
             transaction.commit();
+
         } catch (HibernateException e) {
-            System.out.println(e.getMessage());
+            logger.error("Account cannot be added with name : {}", salaryAccount.getAccountName());
             throw new EmployeeException("Account cannot be added with name : " 
                                         + salaryAccount.getAccountName(), e);
         }
-        return id;
     }
 
     @Override
-    public Map<Integer, SalaryAccount> retrieveEmployeeAccounts() throws EmployeeException {
+    public Map<Integer, SalaryAccount> getEmployeeAccounts() throws EmployeeException {
         Transaction transaction = null;   
         Map<Integer, SalaryAccount> accounts = new HashMap<>();
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
@@ -58,7 +59,7 @@ public class SalaryAccountDaoImpl implements SalaryAccountDao {
             transaction.commit();
             return accounts;
         } catch (HibernateException e) {
-            System.out.println(e.getMessage());
+            logger.error("Accounts cannot be retrieved!");
             throw new EmployeeException("Accounts cannot be retrieved!", e);
         } 
     }
@@ -72,14 +73,14 @@ public class SalaryAccountDaoImpl implements SalaryAccountDao {
             session.saveOrUpdate(salaryAccount);
             transaction.commit();
         } catch (HibernateException e) {
-            System.out.println(e.getMessage());
+            logger.error("Account cannot be updated with name : {}", salaryAccount.getAccountName());
             throw new EmployeeException("Account cannot be updated with name : " 
                                         + salaryAccount.getAccountName(), e);
         }
     }
 
     @Override
-    public SalaryAccount retrieveAccount(int accountId) throws EmployeeException {  
+    public SalaryAccount getAccount(int accountId) throws EmployeeException {
         Transaction transaction = null;
         SalaryAccount salaryAccount = null;   
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
@@ -88,8 +89,8 @@ public class SalaryAccountDaoImpl implements SalaryAccountDao {
             transaction.commit();
             return salaryAccount;
         } catch (HibernateException e) {
-            System.out.println(e.getMessage());
-            throw new EmployeeException("Error at searching " + accountId, e);
+            logger.error("Error at searching account with Id : {}", accountId);
+            throw new EmployeeException("Error at searching account with Id : " + accountId, e);
         }
     } 
 }

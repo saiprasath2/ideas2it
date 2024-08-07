@@ -27,12 +27,12 @@ public interface EmployeeService {
      *
      * @param employeeName  String value to set employee Name.
      * @param contactNumber  String value to set contact number.
-     * @param department  String value to set employee department.
-     * @param dateOfBirth  LocalDate to calculate age of employee.
-     * @return boolean value to display status of addition.
+     * @param departmentId  String value to set employee department.
+     * @param employeeDOB LocalDate to calculate age of employee.
+     * @return Employee value to display status of addition.
      * @throws EmployeeException when insertion fails.
      */
-    public boolean addEmployee(String employeeName, LocalDate employeeDOB,
+    public Employee addEmployee(String employeeName, LocalDate employeeDOB,
                                String contactNumber, 
                                int departmentId, String accountName,
                                String ifscCode) throws EmployeeException ;
@@ -53,11 +53,11 @@ public interface EmployeeService {
      * at OperationDao for insertion.
      * </p>
      *
-     * @param removeId  int value to remove the employeeId.
-     * @return boolean value to send message.
+     * @param removableId  int value to remove the employeeId.
+     * @return Employee value to send message.
      * @throws EmployeeException when removal fails.
      */ 
-    public boolean removeEmployee(int removableId) throws EmployeeException;
+    public Employee removeEmployee(int removableId) throws EmployeeException;
 
     /**
      * <p>
@@ -68,7 +68,7 @@ public interface EmployeeService {
      * @return List<> to print the list.
      * @throws EmployeeException when retrieval fails.
      */
-    public List<Employee> displayEmployees() throws EmployeeException;
+    public List<Employee> retrieveEmployees() throws EmployeeException;
 
     /**
      * <p>
@@ -76,7 +76,7 @@ public interface EmployeeService {
      * for displaying the employee.
      * </p>
      *
-     * @param searchId  int value to search the employee.
+     * @param searchableId  int value to search the employee.
      * @return employee value to display an employee.
      * @throws EmployeeException when search fails.
      */

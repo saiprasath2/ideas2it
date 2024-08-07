@@ -9,15 +9,15 @@ import java.util.Set;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import com.ideas2it.ems.assister.ConnectionAssister;
-import com.ideas2it.ems.department.dao.DepartmentDao;
-import com.ideas2it.ems.exceptions.EmployeeException;
-import com.ideas2it.ems.model.Department;
-import com.ideas2it.ems.model.Employee;
 import org.hibernate.HibernateException; 
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+import com.ideas2it.ems.assister.ConnectionAssister;
+import com.ideas2it.ems.exceptions.EmployeeException;
+import com.ideas2it.ems.model.Department;
+import com.ideas2it.ems.model.Employee;
 
 /**
  * <p>
@@ -27,12 +27,12 @@ import org.hibernate.Transaction;
  * </p>
  *
  * @author Saiprasath
- * @version 1.0
+ * @version 1.4
  */
 public class DepartmentDaoImpl implements DepartmentDao { 
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     @Override
-    public boolean insertDepartment(String departmentName) throws EmployeeException {
+    public Department insertDepartment(String departmentName) throws EmployeeException {
         Transaction transaction = null;   
         Integer id = 0;
         logger.debug("Creating new Department.");
@@ -43,7 +43,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
             System.out.println(id);
             transaction.commit();
             if (id > 0) {
-                return true;
+                return department;
             }
         } catch (HibernateException e) {
             logger.error("Department cannot be added with name : " 
@@ -51,11 +51,11 @@ public class DepartmentDaoImpl implements DepartmentDao {
             throw new EmployeeException("Department cannot be added with name : " 
                                         + departmentName, e);
         }
-        return false;
+        return null;
     }  
 
     @Override
-    public boolean removeDepartment(int departmentId) throws EmployeeException {
+    public Department removeDepartment(int departmentId) throws EmployeeException {
         Transaction transaction = null;   
         int rowsAffected = 0;
         logger.debug("Removing given department" + departmentId);
@@ -66,14 +66,15 @@ public class DepartmentDaoImpl implements DepartmentDao {
             query.setParameter("id", departmentId);
             rowsAffected = query.executeUpdate();
             transaction.commit();
+            Department department = getDepartment(departmentId);
             if (rowsAffected == 1) {
-                return true;
+                return department;
             }
         } catch (HibernateException e) {
-            logger.error("Error at removing the department with id : " + departmentId);
+            logger.error("Error at removing the department with id : {}", departmentId);
             throw new EmployeeException("Error at removing " + departmentId, e);
         }
-        return false;
+        return null;
     }
 
     @Override
@@ -99,16 +100,16 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     public Department getDepartment(int departmentId) throws EmployeeException {
         Transaction transaction = null;
-        Department department = null;   
-        logger.debug("Retriving the given department with id : " + departmentId);
+        Department department = null;
+        logger.debug("Retriving the given department with id : {}", departmentId);
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             department = session.get(Department.class, departmentId);
             transaction.commit();
             return department;
         } catch (HibernateException e) {
-            logger.error("Error at searching " + departmentId);
-            throw new EmployeeException("Error at searching " + departmentId, e);
+            logger.error("Error at searching the department with Id : {}", departmentId);
+            throw new EmployeeException("Error at searching department with Id" + departmentId, e);
         }
     }
 
@@ -126,8 +127,8 @@ public class DepartmentDaoImpl implements DepartmentDao {
             transaction.commit();
             return employees; 
         } catch (Exception e) {
-            logger.error("Error at searching :" + choiceForView);
-            throw new EmployeeException("Error at searching :" + choiceForView, e);
+            logger.error("Error at searching employees at department with ID :{}", choiceForView);
+            throw new EmployeeException("Error at searching employees at department with ID :" + choiceForView, e);
         }
     }
 }

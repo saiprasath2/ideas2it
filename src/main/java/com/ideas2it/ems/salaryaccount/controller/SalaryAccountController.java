@@ -15,7 +15,6 @@ import com.ideas2it.ems.employee.service.EmployeeServiceImpl;
 import com.ideas2it.ems.exceptions.EmployeeException;
 import com.ideas2it.ems.salaryaccount.service.SalaryAccountService;
 import com.ideas2it.ems.salaryaccount.service.SalaryAccountServiceImpl;
-import com.ideas2it.ems.util.InputReader;
 
 /**
  * <p>
@@ -26,20 +25,18 @@ import com.ideas2it.ems.util.InputReader;
  * </p>
  *
  * @author Saiprasath
- * version 1.0
+ * version 1.4
  */
 public class SalaryAccountController {
     SalaryAccountService salaryAccountService = new SalaryAccountServiceImpl();
     EmployeeService operationService = new EmployeeServiceImpl();
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     Scanner scanner = new Scanner(System.in);
-    InputReader reader = new InputReader();
 
     /**
      * Scans input choice from user.
      */
     public void assistAccount() {
-        SalaryAccountController salaryAccountController = new SalaryAccountController();
         boolean isExit = false;
         while (!isExit) {
             System.out.println("Account Management :");
@@ -51,8 +48,7 @@ public class SalaryAccountController {
             while (!isValid) {
                 try {
                     System.out.println("Enter choice : ");
-                    int wish = scanner.nextInt();
-                    userWish = wish;
+                    userWish = scanner.nextInt();
                     isValid = true;
                 } catch (InputMismatchException e) {
                     System.out.println("Enter Integer format!!");
@@ -62,7 +58,7 @@ public class SalaryAccountController {
             switch (userWish) {
             case 1:
                 try {
-                    if (salaryAccountService.getAccounts().size() == 0) {
+                    if (salaryAccountService.getAccounts().isEmpty()) {
                         System.out.println("We have no accounts yet.");
                     } else {
                         System.out.println("Avalaible accounts :");
@@ -77,13 +73,13 @@ public class SalaryAccountController {
                 System.out.println("Enter the Id of the employee : ");
                 try {
                     List<Employee> employeeDetails = operationService
-                                                          .displayEmployees();
+                                                          .retrieveEmployees();
                     System.out.println("We have " + employeeDetails.size() 
                                               + " employees.");
                     String format = "| %-6s | %-15s |\n";
                     System.out.format(format, "Id", "Name");
                     for (Employee employee : employeeDetails) {
-                        if (employee.getIsRemoved() == false) {
+                        if (!employee.getIsRemoved()) {
                             System.out.format(format, employee.getEmployeeId()
                                                , employee.getEmployeeName());
                         }
@@ -91,7 +87,7 @@ public class SalaryAccountController {
                     int searchableId = scanner.nextInt();
                     Employee employerDetail = operationService
                                                .searchEmployee(searchableId);
-                    if (employerDetail != null && employerDetail.getIsRemoved() == false) {
+                    if (employerDetail != null && !employerDetail.getIsRemoved()) {
                         String pattern = "| %-6s | %-15s | %-15s | %-30s | %-30s |\n";
                         System.out.format(pattern, "Id", "Name", "Department",
                                            "Account No.", "IFSC code");
