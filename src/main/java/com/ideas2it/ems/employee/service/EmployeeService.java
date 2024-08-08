@@ -2,9 +2,7 @@ package com.ideas2it.ems.employee.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
-import com.ideas2it.ems.model.Department;
 import com.ideas2it.ems.exceptions.EmployeeException;
 import com.ideas2it.ems.model.Employee;
 
@@ -92,14 +90,4 @@ public interface EmployeeService {
      * @throws EmployeeException when updation fails.
      */
     public boolean updateEmployee(Employee employee) throws EmployeeException;
-
-    /**
-     * <p>
-     * Passes name of departments from departmentService.
-     *</p>
-     *
-     * @return Map<> value to display departments.
-     * @throws EmployeeException when fetching fails.
-     */
-    public Map<Integer, Department> getDepartments() throws EmployeeException;
 }

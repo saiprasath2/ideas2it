@@ -71,25 +71,23 @@ public class DepartmentDaoImpl implements DepartmentDao {
                 return department;
             }
         } catch (HibernateException e) {
-            logger.error("Error at removing the department with id : {}", departmentId);
-            throw new EmployeeException("Error at removing " + departmentId, e);
+            logger.error("Error at removing the department with id : " + departmentId);
+            throw new EmployeeException("Error at removing department" +
+                                        "with Id : " + departmentId, e);
         }
         return null;
     }
 
     @Override
     public Map<Integer, Department> retrieveEmployeeDepartments() throws EmployeeException {
-        Transaction transaction = null;   
         Map<Integer, Department> departments = new HashMap<>();
         logger.debug("Retrieving all the available departments.");
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
             Query<Department> query = session.createQuery("from Department where isRemoved = false", Department.class);
             List<Department> departmentsFromRecord = query.list();
             for (Department department : departmentsFromRecord) {
                 departments.put(department.getDepartmentId(), department);
             }
-            transaction.commit();
             return departments;
         } catch (HibernateException e) {
             logger.error("Departments cannot be retrieved!");
@@ -99,16 +97,13 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
     @Override
     public Department getDepartment(int departmentId) throws EmployeeException {
-        Transaction transaction = null;
         Department department = null;
         logger.debug("Retriving the given department with id : {}", departmentId);
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
             department = session.get(Department.class, departmentId);
-            transaction.commit();
             return department;
         } catch (HibernateException e) {
-            logger.error("Error at searching the department with Id : {}", departmentId);
+            logger.error("Error at searching the department with Id : " + departmentId);
             throw new EmployeeException("Error at searching department with Id" + departmentId, e);
         }
     }
@@ -116,18 +111,15 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     public Set<Employee> getEmployeesOfDepartment(int choiceForView) throws EmployeeException {
         Set<Employee> employees = new HashSet<>();
-        Transaction transaction = null;   
         logger.debug("Retriving the employees of department with id : " + choiceForView);
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
             Department department = session.get(Department.class, choiceForView);
             if (department != null) {
                 employees = department.getEmployees();
-            } 
-            transaction.commit();
+            }
             return employees; 
         } catch (Exception e) {
-            logger.error("Error at searching employees at department with ID :{}", choiceForView);
+            logger.error("Error at searching employees at department with ID : " + choiceForView);
             throw new EmployeeException("Error at searching employees at department with ID :" + choiceForView, e);
         }
     }

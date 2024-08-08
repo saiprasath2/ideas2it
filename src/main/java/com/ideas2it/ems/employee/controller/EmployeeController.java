@@ -1,8 +1,8 @@
 package com.ideas2it.ems.employee.controller;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -89,9 +89,9 @@ public class EmployeeController {
                                                  contactNumber, department,
                                                  accountNumber, ifscCode);
                     if (null != isAdded) {
-                        logger.info("{} Added Successfully!!", isAdded.getEmployeeName());
+                        logger.info(isAdded.getEmployeeName() + " Added Successfully!!");
                     } else {
-                        logger.info("{} Failed to add!!", employeeName);
+                        logger.info(employeeName + " Failed to add!!");
                     }
                 } catch (EmployeeException e) {
                     logger.error(e.getMessage()); 
@@ -105,9 +105,9 @@ public class EmployeeController {
                     Employee isRemoved = operationService
                                            .removeEmployee(removableId);
                     if (null != isRemoved) {
-                        logger.info("Id : {}\n----Employee data has been removed.----", isRemoved.getEmployeeName());
+                        logger.info("Id : " + isRemoved.getEmployeeName() + "----Employee data has been removed.----");
                     } else {
-                        logger.info("Id : {} cannot be found.", removableId);
+                        logger.info("Id : " + removableId + "cannot be found.");
                     }
                 } catch (EmployeeException e) {
                      logger.error(e.getMessage()); 
@@ -162,7 +162,7 @@ public class EmployeeController {
                                           , employerDetail.getAge());
 
                     } else {
-                        logger.info("Id : {} Data cannot found.", searchableId);
+                        logger.info("Id : " + searchableId + "Data cannot found.");
                     }  
                 } catch (EmployeeException e) {
                     logger.error(e.getMessage()); 
@@ -257,13 +257,13 @@ public class EmployeeController {
                     
                         boolean isUpdated = operationService.updateEmployee(employer);
                         if (isUpdated) {
-                            logger.info("Id : {}has been updated.----", updateId);
+                            logger.info("Id : " + updateId + "has been updated.----");
                         } else {
-                            logger.info("Id : {} data cannot be updated.", updateId);
+                            logger.info("Id : " + updateId + "data cannot be updated.");
                         }
                     }
                     if (!isFound) {
-                        logger.info("Id : {}\nSorry cannot find the data.", updateId);
+                        logger.info("Id : " + updateId + "Sorry cannot find the data.");
                     }
                 } catch (EmployeeException e) {
                     logger.error(e.getMessage()); 
@@ -300,14 +300,14 @@ public class EmployeeController {
                                                         + " with this project.");
                                 } else {
                                     projectService.addEmployee(projectId, employee);
-                                    logger.info("Id : {}Assigned Successfully!", assignId);
+                                    logger.info("Id : " + assignId + " Assigned Successfully!");
                                 }    
                             } else {
                                 System.out.println("Enter valid input. "
                                                     + "No such Project!");
                             }
                         } else {
-                            logger.info("Id : {}Employee not found", assignId);
+                            logger.info("Id : " + assignId + " Employee not found");
                         }
                     }   
                 } catch (EmployeeException e) {

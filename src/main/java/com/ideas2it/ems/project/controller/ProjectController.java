@@ -14,6 +14,7 @@ import com.ideas2it.ems.model.Project;
 import com.ideas2it.ems.project.service.ProjectService;
 import com.ideas2it.ems.project.service.ProjectServiceImpl;
 import com.ideas2it.ems.util.InputReader;
+import com.ideas2it.ems.util.Util;
 
 /**
  * <p>
@@ -64,16 +65,16 @@ public class ProjectController {
                     while (!validInput) {
                         System.out.println("Give the Project to be added :");
                         String userProject = scanner.nextLine();
-                        boolean isValidInput = reader.checkInput(userProject);
+                        boolean isValidInput = Util.checkInput(userProject);
                         try {
                              if (isValidInput) {
                                  Project isInserted = projectService
                                     .addProject(userProject);
                                   validInput = true;
                                  if (null != isInserted) {
-                                     logger.info("{}Created Successfully!", userProject);
+                                     logger.info(userProject + " Created Successfully!");
                                  } else {
-                                     logger.info("{}Failed to create", userProject);
+                                     logger.info(userProject + "Failed to create");
                                  } 
                              } else {
                                  System.out.println("Enter the format correctly!!");
@@ -92,9 +93,9 @@ public class ProjectController {
                             int projectId = reader.checkProject();
                             Project isDeleted = projectService.deleteProject(projectId);
                             if (null != isDeleted) {
-                                logger.info("Id : {} deleted successfully!", projectId);
+                                logger.info("Id : " + projectId + " deleted successfully!");
                             } else {
-                                logger.info("Id : {} Deletion failed", projectId);
+                                logger.info("Id : " + " Deletion failed");
                             }
                         } 
                     } catch (EmployeeException e) {

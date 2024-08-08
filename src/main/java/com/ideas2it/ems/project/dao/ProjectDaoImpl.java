@@ -44,7 +44,8 @@ public class ProjectDaoImpl implements ProjectDao {
                 return project;
             }
         } catch (HibernateException e) {
-            logger.error("Project cannot be added with name : {}", projectName);
+            logger.error("Project cannot be added with name : " 
+                                        + projectName);
             throw new EmployeeException("Project cannot be added with name : " 
                                         + projectName, e);
         }
@@ -65,6 +66,7 @@ public class ProjectDaoImpl implements ProjectDao {
             if (rowsAffected == 1) {
                 return project;
             }
+            transaction.commit();
         } catch (HibernateException e) {
             logger.error("Error at removing with Id :{}", projectId);
             throw new EmployeeException("Error at removing with Id :" + projectId, e);
@@ -74,16 +76,13 @@ public class ProjectDaoImpl implements ProjectDao {
     
     @Override
     public Map<Integer, Project> getEmployeeProjects() throws EmployeeException {
-        Transaction transaction = null;   
         Map<Integer, Project> projects = new HashMap<>();
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
             Query<Project> query = session.createQuery("from Project where isRemoved = false", Project.class);
             List<Project> projectsFromRecord = query.list();
             for (Project project : projectsFromRecord) {
                 projects.put(project.getProjectId(), project);
             }
-            transaction.commit();
             return projects;
         } catch (HibernateException e) {
             logger.error("Projects cannot be retrieved!");
@@ -93,15 +92,12 @@ public class ProjectDaoImpl implements ProjectDao {
     
     @Override
     public Project getProject(int projectId) throws EmployeeException {
-        Transaction transaction = null;
         Project project = null;   
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
             project = session.get(Project.class, projectId);
-            transaction.commit();
             return project;
         } catch (HibernateException e) {
-            logger.error("Error at searching project with Id : {}", projectId);
+            logger.error("Error at searching project with Id : " + projectId);
             throw new EmployeeException("Error at searching project with Id : " + projectId, e);
         }
     }
@@ -109,26 +105,22 @@ public class ProjectDaoImpl implements ProjectDao {
     @Override
     public Set<Employee> getEmployeesOfProjects(int projectId) throws EmployeeException {
         Set<Employee> employees = new HashSet<>();
-        Transaction transaction = null;   
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
             Project project = session.get(Project.class, projectId);
             employees = project.getEmployees();
             if (null != project) {
                 employees = project.getEmployees();
-            } 
-            transaction.commit(); 
+            }
         } catch (HibernateException e) {
-            System.out.println(e.getMessage());
-            throw new EmployeeException("Error at searching :" + projectId, e);
+            logger.error("Error at searching project with ID:" + projectId);
+            throw new EmployeeException("Error at searching project with Id :" + projectId, e);
         }
         return employees;
     } 
 
     @Override
     public void insertEmployee(int id, Employee employee) throws EmployeeException {
-        Transaction transaction = null;   
-        int rowsAffected = 0;
+        Transaction transaction = null;
         Employee newEmployee = null;
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -142,7 +134,8 @@ public class ProjectDaoImpl implements ProjectDao {
             session.saveOrUpdate(project);
             transaction.commit();
         } catch (HibernateException e) {
-            logger.error("Error at inserting Employee{}under Projects{}", employee.getEmployeeId(), getProject(id).getProjectName());
+            logger.error("Error at inserting Employee" + employee.getEmployeeId()
+                                         + "under Projects" + getProject(id).getProjectName());
             throw new EmployeeException("Error at inserting Employee" + employee.getEmployeeId()
                                          + "under Projects" + getProject(id).getProjectName(), e);
         }

@@ -14,6 +14,7 @@ import com.ideas2it.ems.model.Department;
 import com.ideas2it.ems.model.Employee;
 import com.ideas2it.ems.exceptions.EmployeeException;
 import com.ideas2it.ems.util.InputReader;
+import com.ideas2it.ems.util.Util;
 
 /**
  * <p>
@@ -26,7 +27,7 @@ import com.ideas2it.ems.util.InputReader;
  */
 public class DepartmentController {
     DepartmentService departmentService = new DepartmentServiceImpl();
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     Scanner scanner = new Scanner(System.in);
     InputReader reader = new InputReader();
     
@@ -66,7 +67,7 @@ public class DepartmentController {
                     logger.debug("Checks the entered input");
                     System.out.println("Give the department to be added :");
                     String userDepartment = scanner.nextLine();
-                    boolean isValidInput = reader.checkDeptInput(userDepartment);
+                    boolean isValidInput = Util.checkDeptInput(userDepartment);
                     try {
                         if (isValidInput) {
                             Department isInserted = departmentService
@@ -101,7 +102,7 @@ public class DepartmentController {
                                 logger.info("Id : " + departmentId + "Deletion failed");
                             }
                         } else {
-                            logger.warn("Cannot delete the linked data -->" + departmentId);
+                            logger.warn("Cannot delete the linked data -->" + (departmentId));
                         }
                     } 
                 } catch (EmployeeException e) {
@@ -146,7 +147,7 @@ public class DepartmentController {
                                                 , employee.getAge());
                         }
                     } else {
-                        logger.info("No employees found in {}", departmentId);
+                        logger.info("No employees found in department with Id : " + (departmentId));
                     }
                 } catch (EmployeeException e) {
                     logger.error(e.getMessage()); 

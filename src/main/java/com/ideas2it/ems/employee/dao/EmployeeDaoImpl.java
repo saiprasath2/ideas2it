@@ -41,7 +41,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 return employee;
             } 
         } catch (HibernateException e) {
-            logger.info("Error at adding {}", employee.getEmployeeName());
+            logger.info("Error at adding " + employee.getEmployeeName());
             throw new EmployeeException("Error at adding " + employee.getEmployeeName(), e);
         }
         return null;
@@ -64,7 +64,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 return employee;
             } 
         } catch (HibernateException e) {
-            logger.info("Error at removing :{}", removableId);
+            logger.info("Error at removing :" + removableId);
             throw new EmployeeException("Error at removing :" + removableId, e);
         }
         return null;
@@ -73,14 +73,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     public List<Employee> getEmployees() throws EmployeeException {
         List<Employee> employeeRecord = new ArrayList<>();
-        Transaction transaction = null;
         logger.debug("Retrieving employees from records.");
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
             Query<Employee> query = session.createQuery("from Employee where isRemoved = false",
                                                          Employee.class);
             employeeRecord = query.list();
-            transaction.commit();
         } catch (HibernateException e) { 
             logger.debug("Error while fetching employees info");
             throw new EmployeeException("Error while fetching employees info", e);
@@ -90,16 +87,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
     
     @Override
     public Employee getEmployee(int searchableId) throws EmployeeException {
-        Transaction transaction = null;   
         Employee employee = null;
         logger.debug("Retrieving the employee with ID : {}", searchableId);
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
             employee = session.createQuery("from Employee where employeeId = :id"
                                             + " and isRemoved = false", Employee.class).setParameter("id", searchableId).uniqueResult();
-            transaction.commit();
         } catch (HibernateException e) {
-            logger.debug("Error at searching :{}", searchableId);
+            logger.debug("Error at searching :" + searchableId);
             throw new EmployeeException("Error at searching :" + searchableId, e);
         }
         return employee;
@@ -129,7 +123,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
             session.saveOrUpdate(employee);
             transaction.commit();
         } catch (HibernateException e) {
-            logger.debug("Error at updating employee with name :{}", employee.getEmployeeName());
+            logger.debug("Error at updating employee with name :" + employee.getEmployeeName());
             throw new EmployeeException("Error at updating employee with name :" + employee.getEmployeeName(), e);
         }
         return true;                 

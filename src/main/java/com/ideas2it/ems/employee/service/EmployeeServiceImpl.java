@@ -69,9 +69,4 @@ public class EmployeeServiceImpl implements EmployeeService {
     public boolean updateEmployee(Employee employee) throws EmployeeException {
         return operationDao.updateEmployee(employee);               
     }
-   
-    @Override
-    public Map<Integer, Department> getDepartments() throws EmployeeException {
-        return departmentService.getDepartments();
-    }
 }

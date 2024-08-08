@@ -39,7 +39,7 @@ public class SalaryAccountDaoImpl implements SalaryAccountDao {
             transaction.commit();
 
         } catch (HibernateException e) {
-            logger.error("Account cannot be added with name : {}", salaryAccount.getAccountName());
+            logger.error("Account cannot be added with name : " + salaryAccount.getAccountName());
             throw new EmployeeException("Account cannot be added with name : " 
                                         + salaryAccount.getAccountName(), e);
         }
@@ -47,16 +47,13 @@ public class SalaryAccountDaoImpl implements SalaryAccountDao {
 
     @Override
     public Map<Integer, SalaryAccount> getEmployeeAccounts() throws EmployeeException {
-        Transaction transaction = null;   
         Map<Integer, SalaryAccount> accounts = new HashMap<>();
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
             Query<SalaryAccount> query = session.createQuery("from SalaryAccount", SalaryAccount.class);
             List<SalaryAccount> accountsFromRecord = query.list();
             for (SalaryAccount account : accountsFromRecord) {
                 accounts.put(account.getAccountId(), account);
             }
-            transaction.commit();
             return accounts;
         } catch (HibernateException e) {
             logger.error("Accounts cannot be retrieved!");
@@ -73,7 +70,7 @@ public class SalaryAccountDaoImpl implements SalaryAccountDao {
             session.saveOrUpdate(salaryAccount);
             transaction.commit();
         } catch (HibernateException e) {
-            logger.error("Account cannot be updated with name : {}", salaryAccount.getAccountName());
+            logger.error("Account cannot be updated with name : " + salaryAccount.getAccountName());
             throw new EmployeeException("Account cannot be updated with name : " 
                                         + salaryAccount.getAccountName(), e);
         }
@@ -81,15 +78,12 @@ public class SalaryAccountDaoImpl implements SalaryAccountDao {
 
     @Override
     public SalaryAccount getAccount(int accountId) throws EmployeeException {
-        Transaction transaction = null;
         SalaryAccount salaryAccount = null;   
         try (Session session = ConnectionAssister.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
             salaryAccount = session.get(SalaryAccount.class, accountId);
-            transaction.commit();
             return salaryAccount;
         } catch (HibernateException e) {
-            logger.error("Error at searching account with Id : {}", accountId);
+            logger.error("Error at searching account with Id : " + accountId);
             throw new EmployeeException("Error at searching account with Id : " + accountId, e);
         }
     } 

@@ -1,4 +1,5 @@
 package com.ideas2it.ems.model;
+import com.ideas2it.ems.util.Util;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -169,10 +170,6 @@ public class Employee {
      * @return String value of current age of the employee.
      */
     public String getAge() {
-        if(dateOfBirth != null) {
-            return Period.between(dateOfBirth, LocalDate.now()).getYears()
-                + "y" + Period.between(dateOfBirth, LocalDate.now()).getMonths() + "m";
-        }
-        return "";
+        return Util.calculateAge(getDateOfBirth());
     }
 }
